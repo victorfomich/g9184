@@ -1,3 +1,7 @@
+/**
+ * Подстановка результатов на index / certificate, чистые URL, лоадер, Share.
+ * Используется DET_store (API или localStorage).
+ */
 (function (global) {
   function getParamR() {
     return new URLSearchParams(location.search).get("r");
