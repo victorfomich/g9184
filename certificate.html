@@ -515,11 +515,73 @@
       .cert-toolbar {
         display: none;
       }
+
+      .det-page-loader {
+        display: none !important;
+      }
+    }
+
+    html.det-loading {
+      overflow: hidden;
+    }
+
+    html.det-loading .det-page-shell {
+      visibility: hidden;
+    }
+
+    .det-page-loader {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 100000;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 16px;
+      background: var(--bg-page);
+      font-family: Nunito, system-ui, sans-serif;
+      color: var(--text);
+      font-size: 15px;
+    }
+
+    html.det-loading .det-page-loader {
+      display: flex;
+    }
+
+    .det-page-loader .det-spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid #e8e8e8;
+      border-top-color: var(--green);
+      border-radius: 50%;
+      animation: det-spin 0.7s linear infinite;
+    }
+
+    @keyframes det-spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    #cert-photo[data-empty] {
+      background: #ececec;
+      object-fit: none;
     }
   </style>
+  <script>
+    (function () {
+      try {
+        if (new URLSearchParams(location.search).get("r")) document.documentElement.classList.add("det-loading");
+      } catch (e) {}
+    })();
+  </script>
 </head>
 <body>
-  <div class="page">
+  <div class="det-page-loader" id="det-page-loader" aria-live="polite" aria-busy="true">
+    <div class="det-spinner" aria-hidden="true"></div>
+    <span>Loading…</span>
+  </div>
+  <div class="page det-page-shell">
     <div class="shell">
       <div class="cert-toolbar">
         <p class="cert-toolbar-title">Сертификат</p>
@@ -550,30 +612,27 @@
       <img
         class="photo"
         id="cert-photo"
-        src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop&crop=face"
+        data-empty="1"
+        src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
         width="132"
         height="132"
         alt=""
       />
       <div class="identity-main">
-        <h1 class="full-name" id="cert-full-name">Goodine, Michael Douglas</h1>
+        <h1 class="full-name" id="cert-full-name">—</h1>
         <div class="identity-dates">
-          <p id="cert-dob-line">Date of birth: August 24, 1982</p>
-          <p id="cert-exam-line">Test taken: February 26, 2025</p>
+          <p id="cert-dob-line">Date of birth: —</p>
+          <p id="cert-exam-line">Test taken: —</p>
         </div>
       </div>
       <div class="identity-side">
         <div class="side-block">
           <span class="lbl">Certificate ID:</span>
-          <span class="val" id="cert-id-value">ww9u9ff03bcr5mu1</span>
+          <span class="val" id="cert-id-value">—</span>
         </div>
         <div class="side-block">
           <span class="lbl">Link:</span>
-          <span class="val"
-            ><a id="cert-link-url" href="https://certs.duolingo.com/ww9u9ff03bcr5mu1"
-              >certs.duolingo.com/ww9u9ff03bcr5mu1</a
-            ></span
-          >
+          <span class="val"><a id="cert-link-url" href="#">—</a></span>
         </div>
       </div>
     </section>

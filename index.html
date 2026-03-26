@@ -563,10 +563,62 @@
       }
     }
 
+    html.det-loading {
+      overflow: hidden;
+    }
+
+    html.det-loading .det-page-shell {
+      visibility: hidden;
+    }
+
+    .det-page-loader {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 100000;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 16px;
+      background: #fff;
+      font-family: Nunito, system-ui, sans-serif;
+      color: #4b4b4b;
+      font-size: 15px;
+    }
+
+    html.det-loading .det-page-loader {
+      display: flex;
+    }
+
+    .det-page-loader .det-spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid #e8e8e8;
+      border-top-color: #58cc02;
+      border-radius: 50%;
+      animation: det-spin 0.7s linear infinite;
+    }
+
+    @keyframes det-spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
   </style>
+  <script>
+    (function () {
+      try {
+        if (new URLSearchParams(location.search).get("r")) document.documentElement.classList.add("det-loading");
+      } catch (e) {}
+    })();
+  </script>
 </head>
 <body>
-  <main class="shell">
+  <div class="det-page-loader" id="det-page-loader" aria-live="polite" aria-busy="true">
+    <div class="det-spinner" aria-hidden="true"></div>
+    <span>Loading…</span>
+  </div>
+  <main class="shell det-page-shell">
     <header class="topbar">
       <div class="menu" aria-hidden="true">&#9776;</div>
       <div class="brand">

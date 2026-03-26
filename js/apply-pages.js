@@ -108,7 +108,7 @@
       [result.lastName, result.firstName].filter(Boolean).join(", ") ||
       "";
     var nameEl = document.getElementById("cert-full-name");
-    if (nameEl && full) nameEl.textContent = full;
+    if (nameEl) nameEl.textContent = full || "—";
 
     var dob = document.getElementById("cert-dob-line");
     if (dob) dob.textContent = "Date of birth: " + (result.dob || "—");
@@ -121,20 +121,30 @@
     if (certIdEl) certIdEl.textContent = cid || "—";
 
     var linkA = document.getElementById("cert-link-url");
-    if (linkA) {
-      if (cid) {
-        var href = "https://certs.duolingo.com/" + cid;
-        linkA.href = href;
-        linkA.textContent = "certs.duolingo.com/" + cid;
-      } else {
-        linkA.href = "#";
-        linkA.textContent = "—";
+    if (linkA && result.id) {
+      var certPageUrl = pageUrl("certificate", result.id);
+      linkA.href = certPageUrl;
+      try {
+        var u = new URL(certPageUrl);
+        linkA.textContent = u.host + u.pathname + u.search;
+      } catch (e1) {
+        linkA.textContent = certPageUrl;
       }
+    } else if (linkA) {
+      linkA.href = "#";
+      linkA.textContent = "—";
     }
 
     var photo = document.getElementById("cert-photo");
-    if (photo && result.photo) {
-      photo.src = result.photo;
+    if (photo) {
+      if (result.photo) {
+        photo.removeAttribute("data-empty");
+        photo.src = result.photo;
+      } else {
+        photo.setAttribute("data-empty", "1");
+        photo.src =
+          "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
+      }
     }
 
     var cefr = document.getElementById("cert-cefr-title");
@@ -155,6 +165,30 @@
     if (full) document.title = "Certificate — " + full;
   }
 
+  function setPageLoading(on) {
+    var v = !!on;
+    document.documentElement.classList.toggle("det-loading", v);
+    var loader = document.getElementById("det-page-loader");
+    if (loader) loader.setAttribute("aria-busy", v ? "true" : "false");
+  }
+
+  /** Шрифты + фото сертификата (если есть), затем можно убирать лоадер */
+  function waitForDeferredAssets() {
+    var fontWait =
+      document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
+    return fontWait.then(function () {
+      return new Promise(function (resolve) {
+        var photo = document.getElementById("cert-photo");
+        if (!photo || !photo.getAttribute("src") || photo.complete) return resolve();
+        var done = function () {
+          resolve();
+        };
+        photo.addEventListener("load", done, { once: true });
+        photo.addEventListener("error", done, { once: true });
+      });
+    });
+  }
+
   function showNotFound() {
     var bar = document.createElement("div");
     bar.setAttribute("role", "alert");
@@ -168,15 +202,25 @@
   function initScorePage() {
     var id = getParamR();
     if (!id) return;
+    setPageLoading(true);
     global.DET_store.ready
       .then(function () {
         return global.DET_store.get(id);
       })
       .then(function (result) {
-        if (!result) showNotFound();
-        else applyToScorePage(result);
+        if (!result) {
+          setPageLoading(false);
+          showNotFound();
+          return;
+        }
+        applyToScorePage(result);
+        return waitForDeferredAssets();
+      })
+      .then(function () {
+        setPageLoading(false);
       })
       .catch(function () {
+        setPageLoading(false);
         showNotFound();
       });
   }
@@ -184,15 +228,25 @@
   function initCertPage() {
     var id = getParamR();
     if (!id) return;
+    setPageLoading(true);
     global.DET_store.ready
       .then(function () {
         return global.DET_store.get(id);
       })
       .then(function (result) {
-        if (!result) showNotFound();
-        else applyToCertificatePage(result);
+        if (!result) {
+          setPageLoading(false);
+          showNotFound();
+          return;
+        }
+        applyToCertificatePage(result);
+        return waitForDeferredAssets();
+      })
+      .then(function () {
+        setPageLoading(false);
       })
       .catch(function () {
+        setPageLoading(false);
         showNotFound();
       });
   }
@@ -251,6 +305,7 @@
     pageUrl: pageUrl,
     applyToScorePage: applyToScorePage,
     applyToCertificatePage: applyToCertificatePage,
+    setPageLoading: setPageLoading,
     initScorePage: initScorePage,
     initCertPage: initCertPage,
     initShareButton: initShareButton,
