@@ -1,57 +1,58 @@
 <!DOCTYPE html>
 <!--
-  Admin — CRUD результатов; список/сохранение через /api (Supabase на проде).
-  Чистые URL: /admin. Локально: npm start + тот же origin для API.
+  Панель: CRUD результатов через /api (Supabase на проде). Локально: npm start.
 -->
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin — DET результаты</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap"
-    rel="stylesheet"
-  />
+  <title>DET — управление</title>
   <style>
     :root {
-      --bg: #ececec;
-      --card: #fff;
-      --text: #4b4b4b;
-      --muted: #888;
-      --blue: #1cb0f6;
-      --green: #58cc02;
-      --border: #e0e0e0;
+      --bg: #000000;
+      --line: #333333;
+      --text: #e8e8e8;
+      --muted: #888888;
+      --accent: #cfcfcf;
     }
     * {
       box-sizing: border-box;
     }
-    body {
+    body.det-panel {
       margin: 0;
-      font-family: Nunito, system-ui, sans-serif;
+      font-family: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas, monospace;
       background: var(--bg);
       color: var(--text);
-      font-size: 15px;
-      line-height: 1.45;
-      padding: clamp(16px, 3vw, 28px);
-      padding-bottom: 48px;
+      font-size: 13px;
+      line-height: 1.4;
+      padding: 16px 18px 40px;
+      -webkit-user-select: text;
+      user-select: text;
     }
     h1 {
-      margin: 0 0 8px;
-      font-size: clamp(22px, 4vw, 28px);
-      font-weight: 800;
+      margin: 0 0 6px;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
     }
     .sub {
       color: var(--muted);
-      font-size: 14px;
-      margin-bottom: 24px;
-      max-width: 640px;
+      font-size: 12px;
+      margin: 0 0 20px;
+      max-width: 720px;
+    }
+    .sub code {
+      background: #111;
+      border: 1px solid var(--line);
+      padding: 1px 5px;
+      font-size: 11px;
     }
     .layout {
       display: grid;
-      gap: 24px;
-      max-width: 1100px;
+      gap: 16px;
+      max-width: 1200px;
       margin: 0 auto;
     }
     @media (min-width: 900px) {
@@ -61,30 +62,42 @@
       }
     }
     .card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: clamp(16px, 3vw, 22px);
-      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: 0;
+      padding: 14px 14px 16px;
     }
     .card h2 {
-      margin: 0 0 16px;
-      font-size: 17px;
-      font-weight: 800;
+      margin: 0 0 14px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 8px;
+    }
+    .section-label {
+      margin: 14px 0 8px;
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
     }
     label {
       display: block;
-      font-size: 12px;
-      font-weight: 700;
+      font-size: 10px;
+      font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: 0.06em;
+      letter-spacing: 0.08em;
       color: var(--muted);
-      margin-bottom: 6px;
+      margin-bottom: 4px;
     }
     .row {
       display: grid;
-      gap: 12px;
-      margin-bottom: 14px;
+      gap: 10px;
+      margin-bottom: 10px;
     }
     @media (min-width: 500px) {
       .row.cols-2 {
@@ -96,127 +109,166 @@
     input[type="file"],
     textarea {
       width: 100%;
-      padding: 10px 12px;
-      border: 1px solid var(--border);
-      border-radius: 10px;
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+      border-radius: 0;
       font-family: inherit;
-      font-size: 14px;
+      font-size: 13px;
+      background: #000;
+      color: var(--text);
+    }
+    input::file-selector-button {
+      font-family: inherit;
+      font-size: 11px;
+      background: #111;
+      color: var(--text);
+      border: 1px solid var(--line);
+      padding: 4px 8px;
+      margin-right: 8px;
+      cursor: pointer;
     }
     input:focus,
     textarea:focus {
-      outline: 2px solid rgba(28, 176, 246, 0.35);
-      border-color: #b8e6fb;
+      outline: 1px solid #666;
+      border-color: #666;
     }
     textarea {
-      min-height: 70px;
+      min-height: 72px;
       resize: vertical;
+    }
+    textarea.readonly-json {
+      min-height: 100px;
+      margin-top: 6px;
     }
     .actions {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 18px;
+      gap: 8px;
+      margin-top: 14px;
     }
     button {
       font-family: inherit;
       cursor: pointer;
-      border: none;
-      border-radius: 10px;
-      padding: 10px 18px;
-      font-weight: 800;
-      font-size: 13px;
-      letter-spacing: 0.04em;
+      border-radius: 0;
+      padding: 8px 14px;
+      font-weight: 600;
+      font-size: 11px;
+      letter-spacing: 0.06em;
       text-transform: uppercase;
+      border: 1px solid var(--line);
+      background: #0a0a0a;
+      color: var(--text);
+    }
+    button:hover {
+      background: #141414;
     }
     .btn-primary {
-      background: var(--blue);
+      background: #111;
+      border-color: #555;
       color: #fff;
     }
-    .btn-primary:hover {
-      filter: brightness(1.05);
-    }
     .btn-secondary {
-      background: #fff;
-      color: var(--text);
-      border: 2px solid var(--border);
+      background: #000;
     }
     .btn-danger {
-      background: #ffe4e4;
-      color: #a33;
+      background: #1a0a0a;
+      border-color: #522;
+      color: #e88;
     }
     .btn-small {
-      padding: 6px 10px;
-      font-size: 11px;
+      padding: 5px 8px;
+      font-size: 10px;
+    }
+    .row-actions-end {
+      display: flex;
+      align-items: flex-end;
     }
     .photo-preview {
       width: 120px;
       height: 120px;
-      border-radius: 12px;
+      border-radius: 0;
       object-fit: cover;
-      border: 1px solid var(--border);
+      border: 1px solid var(--line);
       display: block;
       margin-top: 8px;
     }
     .result-item {
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 14px;
-      margin-bottom: 12px;
-      background: #fafafa;
+      border: 1px solid var(--line);
+      border-radius: 0;
+      padding: 10px;
+      margin-bottom: 10px;
+      background: #000;
     }
     .result-item:last-child {
       margin-bottom: 0;
     }
     .result-item strong {
       display: block;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
+      color: var(--accent);
+    }
+    .result-item .meta-id {
+      font-size: 11px;
+      color: var(--muted);
     }
     .result-item .links {
-      font-size: 12px;
+      font-size: 11px;
       word-break: break-all;
       color: var(--muted);
       margin: 8px 0;
     }
     .result-item .links a {
-      color: var(--blue);
+      color: #9cf;
     }
     .empty {
       color: var(--muted);
-      font-size: 14px;
+      font-size: 12px;
     }
     .toast {
       position: fixed;
       bottom: 20px;
       left: 50%;
       transform: translateX(-50%);
-      background: #333;
-      color: #fff;
-      padding: 10px 18px;
-      border-radius: 10px;
-      font-size: 14px;
+      background: #111;
+      border: 1px solid var(--line);
+      color: var(--text);
+      padding: 10px 16px;
+      border-radius: 0;
+      font-size: 12px;
       z-index: 1000;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
     }
     .top-links {
-      margin-bottom: 20px;
+      margin-bottom: 16px;
+      font-size: 12px;
     }
     .top-links a {
-      color: var(--blue);
-      font-weight: 700;
+      color: #9cf;
+      text-decoration: none;
+    }
+    .top-links a:hover {
+      text-decoration: underline;
+    }
+    .import-block {
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
+    }
+    .import-block .actions + label {
+      margin-top: 12px;
     }
   </style>
 </head>
-<body>
+<body class="det-panel">
   <div class="top-links">
-    <a href="/">← Score page</a>
+    <a href="/">← главная</a>
     ·
-    <a href="/certificate">Certificate</a>
+    <a href="/certificate">сертификат</a>
   </div>
-  <h1>Admin: результаты DET</h1>
+  <h1>DET — записи</h1>
   <p class="sub">
-    Если в <code>lib/supabase-config.js</code> заданы URL и service role ключ, данные в
-    <strong>Supabase</strong>. Иначе при <code>npm start</code> — файл <code>data/results.json</code>; без
-    API — только localStorage. Ссылки: <code>/</code>, <code>/certificate</code> с <code>?r=…</code>.
+    Ключи в <code>lib/supabase-config.js</code> → Supabase; иначе <code>npm start</code> и файл
+    <code>data/results.json</code>; без API — только браузер. Публичные страницы:
+    <code>/</code>, <code>/certificate</code> с <code>?r=…</code>.
   </p>
 
   <div class="layout">
@@ -273,7 +325,7 @@
           </div>
         </div>
 
-        <p style="margin: 16px 0 8px; font-weight: 800; font-size: 13px">Individual</p>
+        <p class="section-label">Individual</p>
         <div class="row cols-2">
           <div><label for="speaking">Speaking</label><input type="number" id="speaking" min="10" max="160" value="135" /></div>
           <div><label for="writing">Writing</label><input type="number" id="writing" min="10" max="160" value="135" /></div>
@@ -283,7 +335,7 @@
           <div><label for="listening">Listening</label><input type="number" id="listening" min="10" max="160" value="140" /></div>
         </div>
 
-        <p style="margin: 16px 0 8px; font-weight: 800; font-size: 13px">Integrated</p>
+        <p class="section-label">Integrated</p>
         <div class="row cols-2">
           <div><label for="production">Production</label><input type="number" id="production" min="10" max="160" value="135" /></div>
           <div><label for="literacy">Literacy</label><input type="number" id="literacy" min="10" max="160" value="140" /></div>
@@ -298,7 +350,7 @@
             <label for="certificateId">Certificate ID</label>
             <input type="text" id="certificateId" placeholder="ww9u9ff03bcr5mu1" />
           </div>
-          <div style="display: flex; align-items: flex-end">
+          <div class="row-actions-end">
             <button type="button" class="btn-secondary" id="btn-random-id">Случайный ID</button>
           </div>
         </div>
@@ -313,14 +365,14 @@
     <div class="card">
       <h2>Сохранённые результаты</h2>
       <div id="list"></div>
-      <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border)">
+      <div class="import-block">
         <label for="export-data">Резервная копия (JSON)</label>
-        <textarea id="export-data" readonly style="min-height: 100px; margin-top: 8px"></textarea>
+        <textarea id="export-data" class="readonly-json" readonly></textarea>
         <div class="actions">
           <button type="button" class="btn-secondary" id="btn-copy-json">Копировать JSON</button>
           <button type="button" class="btn-secondary" id="btn-import">Импорт из поля ниже</button>
         </div>
-        <label for="import-field" style="margin-top: 12px">Вставить JSON для импорта</label>
+        <label for="import-field">Вставить JSON для импорта</label>
         <textarea id="import-field" placeholder='{"results":{...}}'></textarea>
       </div>
     </div>
@@ -435,7 +487,7 @@
                 "<strong>" +
                 escapeHtml(name) +
                 "</strong>" +
-                '<span style="font-size:12px;color:#888">id: ' +
+                '<span class="meta-id">id: ' +
                 escapeHtml(r.id) +
                 "</span>" +
                 '<div class="links">Score: <a href="' +

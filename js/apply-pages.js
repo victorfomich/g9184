@@ -1,6 +1,6 @@
 /**
  * Подстановка результатов на index / certificate, чистые URL, лоадер, Share.
- * Используется DET_store (API или localStorage).
+ * DET_store: API или localStorage.
  */
 (function (global) {
   function getParamR() {
@@ -23,9 +23,7 @@
   }
 
   /**
-   * Чистые URL: score → /, certificate → /certificate, admin → /admin.
-   * Поддерживаются старые ключи index.html / certificate.html.
-   * При деплое в подпапку задайте window.DET_BASE_PATH = "/myapp" в js/config.js
+   * Чистые URL: /, /certificate и т.д.; DET_BASE_PATH для подпапки.
    */
   function pageUrl(kind, id) {
     var map = {
@@ -198,8 +196,7 @@
     bar.setAttribute("role", "alert");
     bar.style.cssText =
       "position:fixed;top:0;left:0;right:0;padding:12px 16px;background:#ffe8e8;color:#8b2e2e;font-family:Nunito,sans-serif;font-size:14px;text-align:center;z-index:9999;";
-    bar.textContent =
-      "Результат не найден. Проверьте ссылку или создайте запись в панели /admin";
+    bar.textContent = "Неверная ссылка.";
     document.body.appendChild(bar);
   }
 
