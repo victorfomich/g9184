@@ -1,0 +1,11 @@
+{
+  "name": "det-fake-test",
+  "private": true,
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.49.1",
+    "express": "^4.21.2"
+  }
+}

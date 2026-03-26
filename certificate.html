@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Сертификат — Duolingo English Test</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Nunito:wght@200..1000&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    :root {
+      --bg-page: #ececec;
+      --bg: #ffffff;
+      --text: #4b4b4b;
+      --muted: #afafaf;
+      --link: #1cb0f6;
+      --border: #e5e5e5;
+      --green: #58cc02;
+      --gauge-track: #e8e8e8;
+      --score: 160;
+      --min-score: 10;
+      --max-score: 160;
+      --gauge-dash: calc((var(--score) - var(--min-score)) * 1000 / (var(--max-score) - var(--min-score)));
+      --fw-body: 450;
+      --fw-soft: 700;
+      --fw-ui: 775;
+      --fw-emphasis: 875;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      overflow-x: clip;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      min-height: 100dvh;
+      background: var(--bg-page);
+      font-family: Nunito, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      color: var(--text);
+      font-weight: var(--fw-body);
+      font-variation-settings: "wght" var(--fw-body);
+      font-synthesis: none;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: var(--link);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .page {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: clamp(16px, 4vw, 32px) clamp(12px, 3vw, 24px)
+        max(24px, env(safe-area-inset-bottom, 0px));
+      padding-left: max(clamp(12px, 3vw, 24px), env(safe-area-inset-left, 0px));
+      padding-right: max(clamp(12px, 3vw, 24px), env(safe-area-inset-right, 0px));
+    }
+
+    .shell {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+      overflow: hidden;
+    }
+
+    .cert-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: clamp(14px, 3vw, 18px) clamp(16px, 3vw, 22px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .cert-toolbar-title {
+      margin: 0;
+      font-size: clamp(15px, 2.4vw, 18px);
+      font-weight: var(--fw-emphasis);
+      font-variation-settings: "wght" var(--fw-emphasis);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text);
+    }
+
+    .print-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0;
+      padding: 4px 2px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: clamp(12px, 1.8vw, 14px);
+      font-weight: 800;
+      font-variation-settings: "wght" 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--link);
+    }
+
+    .print-btn:hover {
+      filter: brightness(0.95);
+    }
+
+    .print-btn:focus-visible {
+      outline: 2px solid rgba(28, 176, 246, 0.5);
+      outline-offset: 2px;
+      border-radius: 6px;
+    }
+
+    .print-btn .print-ico {
+      flex-shrink: 0;
+      color: var(--link);
+    }
+
+    .cert-body {
+      padding: clamp(18px, 3.5vw, 28px) clamp(16px, 3vw, 28px) clamp(22px, 4vw, 32px);
+    }
+
+    .cert-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: clamp(18px, 3vw, 24px);
+    }
+
+    .cert-header .brand {
+      display: inline-block;
+      line-height: 0;
+      text-decoration: none;
+      color: inherit;
+      vertical-align: top;
+    }
+
+    .cert-header .brand:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(28, 176, 246, 0.45);
+      border-radius: 6px;
+    }
+
+    .cert-header .brand img {
+      width: min(100%, clamp(180px, 42vw, 260px));
+      height: auto;
+      display: block;
+    }
+
+    .cert-header .official {
+      font-size: clamp(11px, 2vw, 13px);
+      font-weight: var(--fw-soft);
+      font-variation-settings: "wght" var(--fw-soft);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-align: right;
+    }
+
+    .rule {
+      border: 0;
+      border-top: 1px solid var(--border);
+      margin: 0 0 clamp(20px, 3.5vw, 28px);
+    }
+
+    .identity-row {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) minmax(min(200px, 100%), auto);
+      gap: clamp(14px, 3vw, 24px);
+      align-items: start;
+      margin-bottom: clamp(20px, 3.5vw, 28px);
+    }
+
+    @media (max-width: 720px) {
+      .identity-row {
+        grid-template-columns: auto 1fr;
+        grid-template-rows: auto auto;
+      }
+
+      .identity-row .photo {
+        grid-row: span 2;
+      }
+
+      .identity-side {
+        grid-column: 1 / -1;
+        text-align: left;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .identity-row {
+        grid-template-columns: 1fr;
+        justify-items: center;
+        text-align: center;
+      }
+
+      .identity-main {
+        text-align: center;
+      }
+
+      .identity-side {
+        text-align: center;
+      }
+    }
+
+    .identity-main .full-name {
+      margin: 0 0 10px;
+    }
+
+    .identity-dates {
+      margin: 0;
+      font-size: clamp(12px, 1.9vw, 14px);
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .identity-dates p {
+      margin: 0 0 4px;
+    }
+
+    .identity-dates p:last-child {
+      margin-bottom: 0;
+    }
+
+    .identity-side {
+      text-align: right;
+      font-size: clamp(12px, 1.9vw, 14px);
+    }
+
+    .identity-side .side-block {
+      margin-bottom: 10px;
+    }
+
+    .identity-side .side-block:last-child {
+      margin-bottom: 0;
+    }
+
+    .identity-side .lbl {
+      display: block;
+      color: var(--muted);
+      margin-bottom: 2px;
+    }
+
+    .identity-side .val {
+      font-weight: var(--fw-soft);
+      font-variation-settings: "wght" var(--fw-soft);
+      color: var(--text);
+      word-break: break-all;
+    }
+
+    .photo {
+      width: clamp(100px, 22vw, 132px);
+      height: clamp(100px, 22vw, 132px);
+      border-radius: 12px;
+      object-fit: cover;
+      display: block;
+      background: #f0f0f0;
+    }
+
+    .identity-main .full-name {
+      font-size: clamp(20px, 4vw, 26px);
+      font-weight: var(--fw-emphasis);
+      font-variation-settings: "wght" var(--fw-emphasis);
+      line-height: 1.25;
+    }
+
+    .section-heading {
+      margin: 0 0 14px;
+      font-size: clamp(16px, 2.4vw, 18px);
+      font-weight: var(--fw-ui);
+      font-variation-settings: "wght" var(--fw-ui);
+      color: var(--text);
+    }
+
+    .metrics-strip + .section-heading {
+      margin-top: clamp(22px, 3.5vw, 30px);
+    }
+
+    .cert-card {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: clamp(18px, 3vw, 24px);
+      background: #fff;
+      margin-bottom: clamp(24px, 4vw, 32px);
+    }
+
+    .overall-inner {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 1px minmax(0, 1.15fr);
+      gap: clamp(16px, 3vw, 28px);
+      align-items: center;
+    }
+
+    @media (max-width: 640px) {
+      .overall-inner {
+        grid-template-columns: 1fr;
+      }
+
+      .overall-inner .vsep {
+        display: none;
+      }
+    }
+
+    .overall-inner .vsep {
+      width: 1px;
+      align-self: stretch;
+      min-height: 160px;
+      background: var(--border);
+    }
+
+    .gauge-col {
+      display: flex;
+      justify-content: center;
+    }
+
+    .gauge-face {
+      width: 100%;
+      max-width: 220px;
+      margin: 0 auto;
+    }
+
+    .gauge-svg {
+      width: 100%;
+      height: auto;
+      display: block;
+      overflow: visible;
+    }
+
+    .gauge-svg .gauge-cap-label {
+      fill: var(--muted);
+      font-family: Nunito, system-ui, sans-serif;
+      font-weight: var(--fw-soft);
+      font-variation-settings: "wght" var(--fw-soft);
+    }
+
+    .gauge-svg .gauge-score-center {
+      fill: var(--text);
+      font-family: Nunito, system-ui, sans-serif;
+      font-size: 54px;
+      font-weight: var(--fw-emphasis);
+      font-variation-settings: "wght" var(--fw-emphasis);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .gauge-track {
+      fill: none;
+      stroke: var(--gauge-track);
+      stroke-width: 14;
+      stroke-linecap: round;
+    }
+
+    .gauge-fill {
+      fill: none;
+      stroke: var(--green);
+      stroke-width: 14;
+      stroke-linecap: round;
+      stroke-dasharray: var(--gauge-dash) 1000;
+    }
+
+    .level-block {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: clamp(14px, 2.5vw, 18px);
+      min-width: 0;
+    }
+
+    .level-block .level-title {
+      margin: 0 0 12px;
+      font-size: clamp(15px, 2.2vw, 17px);
+      font-weight: var(--fw-emphasis);
+      font-variation-settings: "wght" var(--fw-emphasis);
+    }
+
+    .level-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      font-size: clamp(12px, 1.8vw, 14px);
+      line-height: 1.45;
+    }
+
+    .level-list li {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      margin-bottom: 10px;
+    }
+
+    .level-list li:last-child {
+      margin-bottom: 0;
+    }
+
+    .chk {
+      flex-shrink: 0;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--green);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 800;
+      display: grid;
+      place-items: center;
+      margin-top: 2px;
+    }
+
+    .metrics-strip {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: clamp(10px, 2vw, 14px);
+    }
+
+    @media (max-width: 640px) {
+      .metrics-strip {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 380px) {
+      .metrics-strip {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .metric-cell {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: clamp(14px, 2vw, 18px) clamp(10px, 2vw, 12px);
+      text-align: center;
+      background: #fff;
+    }
+
+    .metrics-strip .lbl {
+      font-size: clamp(10px, 1.5vw, 12px);
+      font-weight: var(--fw-ui);
+      font-variation-settings: "wght" var(--fw-ui);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .metrics-strip .num {
+      font-size: clamp(26px, 5vw, 34px);
+      font-weight: var(--fw-emphasis);
+      font-variation-settings: "wght" var(--fw-emphasis);
+      font-variant-numeric: tabular-nums;
+      line-height: 1;
+    }
+
+    .metrics-strip.integrated .lbl {
+      margin-bottom: 6px;
+    }
+
+    .metrics-strip.integrated .num {
+      margin-bottom: 8px;
+    }
+
+    .metrics-strip.integrated .desc {
+      font-size: clamp(11px, 1.6vw, 13px);
+      font-weight: var(--fw-body);
+      font-variation-settings: "wght" var(--fw-body);
+      text-transform: none;
+      letter-spacing: normal;
+      color: var(--muted);
+      line-height: 1.35;
+    }
+
+    .footer-note {
+      text-align: center;
+      font-size: clamp(12px, 1.8vw, 14px);
+      color: var(--muted);
+      line-height: 1.5;
+      margin-top: clamp(8px, 2vw, 16px);
+    }
+
+    .footer-note a {
+      font-weight: var(--fw-soft);
+      font-variation-settings: "wght" var(--fw-soft);
+    }
+
+    @media print {
+      body {
+        background: #fff;
+      }
+
+      .page {
+        padding: 0;
+        max-width: none;
+      }
+
+      .shell {
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+      }
+
+      .cert-toolbar {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="shell">
+      <div class="cert-toolbar">
+        <p class="cert-toolbar-title">Сертификат</p>
+        <button type="button" class="print-btn" onclick="window.print()">
+          <svg class="print-ico" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+            <path
+              fill="currentColor"
+              d="M19 8h-1V3H6v5H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-6H7v-3h10v3z"
+            />
+          </svg>
+          Распечатать
+        </button>
+      </div>
+      <div class="cert-body">
+    <header class="cert-header">
+      <a href="https://englishtest.duolingo.com/home" class="brand">
+        <img
+          src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjU1IiBoZWlnaHQ9IjM5IiB2aWV3Qm94PSIwIDAgMjU1IDM5IiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik05MC40NDU0IDEyLjAyMzlDOTEuNDUzMyAxMi4wMjM5IDkyLjMxNzIgMTIuODA1NSA5Mi4zMTcyIDEzLjgxMzRDOTIuMzE3MiAxNC44MDA3IDkxLjQ1MzMgMTUuNjAyOSA5MC40NDU0IDE1LjYwMjlDODkuMzk2NCAxNS42MDI5IDg4LjU3MzYgMTQuODAwNyA4OC41NzM2IDEzLjgxMzRDODguNTczNiAxMi44MDU1IDg5LjM5NjQgMTIuMDIzOSA5MC40NDU0IDEyLjAyMzlaTTU0LjAxNzQgMTIuMTI2N0M1NC40MDgzIDEyLjEyNjcgNTQuNjM0NSAxMi4zNzM2IDU0LjYzNDUgMTIuODY3MlYyNy4yMjQ1QzU0LjYzNDUgMjcuNzE4MSA1NC4zODc3IDI3Ljk2NSA1My45OTY5IDI3Ljk2NUM1My40NDE1IDI3Ljk2NSA1Mi42NTk5IDI3LjQ5MTkgNTIuMDgzOSAyNi42MjhDNTEuMzg0NiAyNy40NTA3IDQ5Ljk4NTkgMjguMTcwNyA0OC4zNDA0IDI4LjE3MDdDNDUuMDkwNCAyOC4xNzA3IDQyLjg4OTUgMjUuNzY0MSA0Mi44ODk1IDIyLjUxNDFDNDIuODg5NSAxOS4zMDU0IDQ1LjEzMTYgMTYuODU3NiA0OC4zNDA0IDE2Ljg1NzZDNDkuNTMzNCAxNi44NTc2IDUwLjU4MjQgMTcuMjI3OSA1MS4zNDM1IDE3Ljc2MjdWMTYuMjQwNkM1MS4zNDM1IDEzLjYyODMgNTIuODAzOSAxMi4xMjY3IDU0LjAxNzQgMTIuMTI2N1pNODUuNjczMyAxMi4xMjY3Qzg2LjA2NDIgMTIuMTI2NyA4Ni4yOTA0IDEyLjM3MzYgODYuMjkwNCAxMi44NjcyVjI2LjY2OTFDODYuMjkwNCAyNy40MzAyIDg2LjAwMjUgMjcuNzU5MyA4NS4yMDAzIDI3Ljc1OTNIODQuMDg5NUM4My4yODczIDI3Ljc1OTMgODIuOTk5NCAyNy40MzAyIDgyLjk5OTQgMjYuNjY5MVYxNi4yNDA2QzgyLjk5OTQgMTMuNjI4MyA4NC40NTk4IDEyLjEyNjcgODUuNjczMyAxMi4xMjY3Wk0xMTguODcyIDE2LjUwOEMxMTkuMzI0IDE2LjUwOCAxMTkuNTEgMTYuODk4OCAxMTkuNTEgMTcuNDMzNkMxMTkuNTEgMTguNTQ0MyAxMTguOTk1IDE5LjQ2OTkgMTE3Ljg0MyAxOS44ODEzQzExOC4wNDkgMjAuMzEzMiAxMTguMTUyIDIwLjc4NjMgMTE4LjE1MiAyMS4zMDA2QzExOC4xNTIgMjIuNTE0MSAxMTcuNTM1IDIzLjYwNDMgMTE2LjUyNyAyNC40NjgyQzExNy45MDUgMjUuMTQ3IDExOC43MjggMjYuNzMwOCAxMTguNzI4IDI4LjI3MzVDMTE4LjcyOCAzMS4xMzI2IDExNi40NDUgMzMuMDA0NCAxMTIuOTY5IDMzLjAwNDRDMTA5LjUzNCAzMy4wMDQ0IDEwNy4yMDkgMzEuMTMyNiAxMDcuMjA5IDI4LjI3MzVDMTA3LjIwOSAyNi43MzA4IDEwOC4wMzIgMjUuMTY3NiAxMDkuNDEgMjQuNDY4MkMxMDguMzYxIDIzLjYwNDMgMTA3Ljc4NSAyMi41MTQxIDEwNy43ODUgMjEuMzAwNkMxMDcuNzg1IDE4LjgxMTcgMTA5LjczOSAxNi45NjA1IDExMi44MDQgMTYuOTYwNUMxMTQuNjE0IDE2Ljk2MDUgMTE1LjE0OSAxNy4yNjkgMTE2LjE5OCAxNy4yNjlDMTE2Ljg5NyAxNy4yNjkgMTE3LjM3IDE3LjE2NjIgMTE4LjIxNCAxNi43MTM2QzExOC40ODEgMTYuNTY5NyAxMTguNjg3IDE2LjUwOCAxMTguODcyIDE2LjUwOFpNNzUuMjg1OSAxNi44NTc2Qzc4LjYxODEgMTYuODU3NiA4MS4xMjc2IDE5LjIwMjUgODEuMTI3NiAyMi41MTQxQzgxLjEyNzYgMjUuNzg0NiA3OC42MTgxIDI4LjE3MDcgNzUuMjg1OSAyOC4xNzA3QzcxLjk1MzcgMjguMTcwNyA2OS40NDQzIDI1Ljc4NDYgNjkuNDQ0MyAyMi41MTQxQzY5LjQ0NDMgMTkuMjAyNSA3MS45NTM3IDE2Ljg1NzYgNzUuMjg1OSAxNi44NTc2Wk0xMDAuNjg5IDE2Ljg1NzZDMTAyLjI5MyAxNi44NTc2IDEwMy41NjkgMTcuNDEzIDEwNC40MTIgMTguMzc5N0MxMDUuMjU1IDE5LjM2NzEgMTA1LjY2NyAyMC42NDI0IDEwNS42NjcgMjIuNzE5OFYyNi42NjkxQzEwNS42NjcgMjcuNDcxMyAxMDUuMzM3IDI3Ljc1OTMgMTA0LjU3NiAyNy43NTkzSDEwMy40NjZDMTAyLjcwNSAyNy43NTkzIDEwMi4zNzUgMjcuNDcxMyAxMDIuMzc1IDI2LjY2OTFWMjIuODIyN0MxMDIuMzc1IDIxLjgzNTQgMTAyLjIxMSAyMS4xNTY2IDEwMS44NjEgMjAuNzA0MUMxMDEuNDkxIDIwLjIzMSAxMDAuOTM2IDE5Ljk4NDEgMTAwLjE5NSAxOS45ODQxQzk5LjQ5NTggMTkuOTg0MSA5OC44Nzg3IDIwLjIzMSA5OC40Njc0IDIwLjcwNDFDOTguMDc2NSAyMS4xNTY2IDk3Ljg1MDMgMjEuODU1OSA5Ny44NTAzIDIyLjgwMjFWMjYuNjY5MUM5Ny44NTAzIDI3LjQzMDIgOTcuNTYyMyAyNy43NTkzIDk2Ljc2MDEgMjcuNzU5M0g5NS42NDk0Qzk0Ljg0NzIgMjcuNzU5MyA5NC41NTkyIDI3LjQzMDIgOTQuNTU5MiAyNi42NjkxVjE3LjgwMzhDOTQuNTU5MiAxNy4zMTAyIDk0LjgwNiAxNy4wNjMzIDk1LjE5NjkgMTcuMDYzM0M5NS43NzI4IDE3LjA2MzMgOTYuNTU0NCAxNy41MzY0IDk3LjEzMDQgMTguNDQxNUM5Ny45OTQzIDE3LjQxMyA5OS4zNzI0IDE2Ljg1NzYgMTAwLjY4OSAxNi44NTc2Wk0xMjUuODY1IDE2Ljg1NzZDMTI5LjE5OCAxNi44NTc2IDEzMS43MDcgMTkuMjAyNSAxMzEuNzA3IDIyLjUxNDFDMTMxLjcwNyAyNS43ODQ2IDEyOS4xOTggMjguMTcwNyAxMjUuODY1IDI4LjE3MDdDMTIyLjUzMyAyOC4xNzA3IDEyMC4wMjQgMjUuNzg0NiAxMjAuMDI0IDIyLjUxNDFDMTIwLjAyNCAxOS4yMDI1IDEyMi41MzMgMTYuODU3NiAxMjUuODY1IDE2Ljg1NzZaTTY2LjY4OCAxNy4yNjlDNjcuNDkwMiAxNy4yNjkgNjcuNzc4MiAxNy41OTgxIDY3Ljc3ODIgMTguMzU5MlYyNy4yMjQ1QzY3Ljc3ODIgMjcuNzE4MSA2Ny41MzE0IDI3Ljk2NSA2Ny4xNDA2IDI3Ljk2NUM2Ni41ODUyIDI3Ljk2NSA2NS44MDM2IDI3LjQ5MTkgNjUuMjI3NiAyNi42MDc0QzY0LjQwNDkgMjcuNTc0MiA2My4xNzA3IDI4LjE3MDcgNjEuNzUxNCAyOC4xNzA3QzYwLjMzMjIgMjguMTcwNyA1OS4yMDA5IDI3LjY3NyA1OC4zNzgxIDI2Ljg5NTRDNTcuMzkwOCAyNS45NDkyIDU2Ljg3NjYgMjQuNDg4OCA1Ni44NzY2IDIyLjM5MDdWMTguMzU5MkM1Ni44NzY2IDE3LjU1NyA1Ny4yMDU3IDE3LjI2OSA1Ny45NjY3IDE3LjI2OUg1OS4wNzc0QzU5LjgzODUgMTcuMjY5IDYwLjE2NzYgMTcuNTU3IDYwLjE2NzYgMTguMzU5MlYyMi4wODIyQzYwLjE2NzYgMjMuMzM2OSA2MC4zNzMzIDI0LjAxNTcgNjAuODA1MyAyNC40NjgyQzYxLjE1NDkgMjQuODM4NSA2MS42NDg2IDI1LjA0NDIgNjIuMjg2MiAyNS4wNDQyQzYyLjkyMzkgMjUuMDQ0MiA2My40OTk4IDI0Ljc5NzMgNjMuODcwMSAyNC4zODU5QzY0LjI4MTQgMjMuOTMzNCA2NC40ODcxIDIzLjIzNDEgNjQuNDg3MSAyMi4xODVWMTguMzU5MkM2NC40ODcxIDE3LjU5ODEgNjQuNzc1MSAxNy4yNjkgNjUuNTc3MyAxNy4yNjlINjYuNjg4Wk05MS4wMDA4IDE3LjI2OUM5MS43NjE4IDE3LjI2OSA5Mi4wOTA5IDE3LjU1NyA5Mi4wOTA5IDE4LjM1OTJWMjYuNjY5MUM5Mi4wOTA5IDI3LjQ3MTMgOTEuNzYxOCAyNy43NTkzIDkxLjAwMDggMjcuNzU5M0g4OS44OUM4OS4xMjkgMjcuNzU5MyA4OC43OTk5IDI3LjQ3MTMgODguNzk5OSAyNi42NjkxVjE4LjM1OTJDODguNzk5OSAxNy41NTcgODkuMTI5IDE3LjI2OSA4OS44OSAxNy4yNjlIOTEuMDAwOFpNMTEyLjk2OSAxOS41NTIyQzExMS43NzYgMTkuNTUyMiAxMTAuOTUzIDIwLjMzMzggMTEwLjk1MyAyMS40ODU3QzExMC45NTMgMjIuNTU1MyAxMTEuODU4IDIzLjQxOTIgMTEyLjk2OSAyMy40MTkyQzExNC4xIDIzLjQxOTIgMTE0Ljk4NCAyMi41NTUzIDExNC45ODQgMjEuNDg1N0MxMTQuOTg0IDIwLjMzMzggMTE0LjE4MiAxOS41NTIyIDExMi45NjkgMTkuNTUyMlpNNDguNzkyOSAyNS4yMDg3QzUwLjIxMjEgMjUuMjA4NyA1MS4zNDM1IDI0LjEzOTEgNTEuMzQzNSAyMi41MTQxQzUxLjM0MzUgMjAuODg5MiA1MC4yMTIxIDE5LjgxOTYgNDguNzkyOSAxOS44MTk2QzQ3LjM1MyAxOS44MTk2IDQ2LjIyMTcgMjAuODg5MiA0Ni4yMjE3IDIyLjUxNDFDNDYuMjIxNyAyNC4xMzkxIDQ3LjM1MyAyNS4yMDg3IDQ4Ljc5MjkgMjUuMjA4N1pNNzUuMjg1OSAyNS4yMDg3Qzc2LjgyODYgMjUuMjA4NyA3Ny43OTU0IDI0LjA3NzQgNzcuNzk1NCAyMi41MTQxQzc3Ljc5NTQgMjAuOTUwOSA3Ni44Mjg2IDE5LjgxOTYgNzUuMjg1OSAxOS44MTk2QzczLjc0MzIgMTkuODE5NiA3Mi43NzY1IDIwLjk1MDkgNzIuNzc2NSAyMi41MTQxQzcyLjc3NjUgMjQuMDc3NCA3My43NDMyIDI1LjIwODcgNzUuMjg1OSAyNS4yMDg3Wk0xMjUuODY1IDI1LjIwODdDMTI3LjQwOCAyNS4yMDg3IDEyOC4zNzUgMjQuMDc3NCAxMjguMzc1IDIyLjUxNDFDMTI4LjM3NSAyMC45NTA5IDEyNy40MDggMTkuODE5NiAxMjUuODY1IDE5LjgxOTZDMTI0LjMyMyAxOS44MTk2IDEyMy4zNTYgMjAuOTUwOSAxMjMuMzU2IDIyLjUxNDFDMTIzLjM1NiAyNC4wNzc0IDEyNC4zMjMgMjUuMjA4NyAxMjUuODY1IDI1LjIwODdaTTExMi45NjkgMzAuMzMwNEMxMTQuMzg4IDMwLjMzMDQgMTE1LjQ3OCAyOS4zNjM3IDExNS40NzggMjguMTcwN0MxMTUuNDc4IDI2Ljg5NTQgMTE0LjQ5MSAyNi4wMTA5IDExMi45NjkgMjYuMDEwOUMxMTEuNDQ2IDI2LjAxMDkgMTEwLjQ1OSAyNi44NzQ4IDExMC40NTkgMjguMTcwN0MxMTAuNDU5IDI5LjM4NDIgMTExLjUyOSAzMC4zMzA0IDExMi45NjkgMzAuMzMwNFpNMTQ4LjEzNSAyMi40NzNDMTQ4LjEzNSAyMy4xNzI0IDE0Ny45MDggMjMuNTAxNSAxNDcuMDg2IDIzLjUwMTVIMTQwLjcwOUMxNDAuOTk3IDI0LjQ4ODggMTQyLjAwNSAyNS4yOTEgMTQzLjc1NCAyNS4yOTFDMTQ1LjYwNSAyNS4yOTEgMTQ2LjM4NiAyNC43NTYyIDE0Ni43NzcgMjQuNzU2MkMxNDcuMDI0IDI0Ljc1NjIgMTQ3LjMzMyAyNC44NTkgMTQ3LjMzMyAyNS4zNTI3VjI2LjU0NTdDMTQ3LjMzMyAyNi45NTcxIDE0Ny4yNzEgMjcuMjY1NiAxNDYuOTAxIDI3LjQ5MTlDMTQ2LjQ2OSAyNy43NTkzIDE0NS4yNzYgMjguMTcwNyAxNDMuNDI0IDI4LjE3MDdDMTQwLjExMyAyOC4xNzA3IDEzNy40NTkgMjYuMTEzNyAxMzcuNDU5IDIyLjUxNDFDMTM3LjQ1OSAxOS4zODc2IDEzOS43NDMgMTYuODU3NiAxNDIuODI4IDE2Ljg1NzZDMTQ2LjI4NCAxNi44NTc2IDE0OC4xMzUgMTkuMDk5NyAxNDguMTM1IDIyLjQ3M1pNMTQyLjg2OSAxOS42MTM5QzE0MS42MzUgMTkuNjEzOSAxNDAuODc0IDIwLjMzMzggMTQwLjY4OSAyMS4zODI4SDE0NC45NDdDMTQ0LjgyMyAyMC4zNzUgMTQ0LjE2NSAxOS42MTM5IDE0Mi44NjkgMTkuNjEzOVpNMTU5LjcxNyAxOC4zNzk3QzE2MC41NjEgMTkuMzY3MSAxNjAuOTcyIDIwLjY0MjQgMTYwLjk3MiAyMi43MTk4VjI2LjY2OTFDMTYwLjk3MiAyNy40NzEzIDE2MC42NDMgMjcuNzU5MyAxNTkuODgyIDI3Ljc1OTNIMTU4Ljc3MUMxNTguMDEgMjcuNzU5MyAxNTcuNjgxIDI3LjQ3MTMgMTU3LjY4MSAyNi42NjkxVjIyLjgyMjdDMTU3LjY4MSAyMS44MzU0IDE1Ny41MTYgMjEuMTU2NiAxNTcuMTY3IDIwLjcwNDFDMTU2Ljc5NiAyMC4yMzEgMTU2LjI0MSAxOS45ODQxIDE1NS41MDEgMTkuOTg0MUMxNTQuODAxIDE5Ljk4NDEgMTU0LjE4NCAyMC4yMzEgMTUzLjc3MyAyMC43MDQxQzE1My4zODIgMjEuMTU2NiAxNTMuMTU2IDIxLjg1NTkgMTUzLjE1NiAyMi44MDIxVjI2LjY2OTFDMTUzLjE1NiAyNy40MzAyIDE1Mi44NjggMjcuNzU5MyAxNTIuMDY2IDI3Ljc1OTNIMTUwLjk1NUMxNTAuMTUzIDI3Ljc1OTMgMTQ5Ljg2NSAyNy40MzAyIDE0OS44NjUgMjYuNjY5MVYxNy44MDM4QzE0OS44NjUgMTcuMzEwMiAxNTAuMTExIDE3LjA2MzMgMTUwLjUwMiAxNy4wNjMzQzE1MS4wNzggMTcuMDYzMyAxNTEuODYgMTcuNTM2NCAxNTIuNDM2IDE4LjQ0MTVDMTUzLjMgMTcuNDEzIDE1NC42NzggMTYuODU3NiAxNTUuOTk0IDE2Ljg1NzZDMTU3LjU5OSAxNi44NTc2IDE1OC44NzQgMTcuNDEzIDE1OS43MTcgMTguMzc5N1pNMTY3Ljk3MiAzMy4wMDQ0QzE2NC41MzcgMzMuMDA0NCAxNjIuMjEyIDMxLjEzMjYgMTYyLjIxMiAyOC4yNzM1QzE2Mi4yMTIgMjYuNzMwOCAxNjMuMDM1IDI1LjE2NzYgMTY0LjQxMyAyNC40NjgyQzE2My4zNjQgMjMuNjA0MyAxNjIuNzg4IDIyLjUxNDEgMTYyLjc4OCAyMS4zMDA2QzE2Mi43ODggMTguODExNyAxNjQuNzQyIDE2Ljk2MDUgMTY3LjgwNyAxNi45NjA1QzE2OS42MTcgMTYuOTYwNSAxNzAuMTUyIDE3LjI2OSAxNzEuMjAxIDE3LjI2OUMxNzEuOSAxNy4yNjkgMTcyLjM3MyAxNy4xNjYyIDE3My4yMTcgMTYuNzEzNkMxNzMuNDg0IDE2LjU2OTcgMTczLjY5IDE2LjUwOCAxNzMuODc1IDE2LjUwOEMxNzQuMzI3IDE2LjUwOCAxNzQuNTEzIDE2Ljg5ODggMTc0LjUxMyAxNy40MzM2QzE3NC41MTMgMTguNTQ0MyAxNzMuOTk4IDE5LjQ2OTkgMTcyLjg0NiAxOS44ODEzQzE3My4wNTIgMjAuMzEzMiAxNzMuMTU1IDIwLjc4NjMgMTczLjE1NSAyMS4zMDA2QzE3My4xNTUgMjIuNTE0MSAxNzIuNTM4IDIzLjYwNDMgMTcxLjUzIDI0LjQ2ODJDMTcyLjkwOCAyNS4xNDcgMTczLjczMSAyNi43MzA4IDE3My43MzEgMjguMjczNUMxNzMuNzMxIDMxLjEzMjYgMTcxLjQ0OCAzMy4wMDQ0IDE2Ny45NzIgMzMuMDA0NFpNMTY3Ljk3MiAyMy40MTkyQzE2OS4xMDMgMjMuNDE5MiAxNjkuOTg3IDIyLjU1NTMgMTY5Ljk4NyAyMS40ODU3QzE2OS45ODcgMjAuMzMzOCAxNjkuMTg1IDE5LjU1MjIgMTY3Ljk3MiAxOS41NTIyQzE2Ni43NzkgMTkuNTUyMiAxNjUuOTU2IDIwLjMzMzggMTY1Ljk1NiAyMS40ODU3QzE2NS45NTYgMjIuNTU1MyAxNjYuODYxIDIzLjQxOTIgMTY3Ljk3MiAyMy40MTkyWk0xNjcuOTcyIDMwLjMzMDRDMTY5LjM5MSAzMC4zMzA0IDE3MC40ODEgMjkuMzYzNyAxNzAuNDgxIDI4LjE3MDdDMTcwLjQ4MSAyNi44OTU0IDE2OS40OTQgMjYuMDEwOSAxNjcuOTcyIDI2LjAxMDlDMTY2LjQ0OSAyNi4wMTA5IDE2NS40NjIgMjYuODc0OCAxNjUuNDYyIDI4LjE3MDdDMTY1LjQ2MiAyOS4zODQyIDE2Ni41MzIgMzAuMzMwNCAxNjcuOTcyIDMwLjMzMDRaTTE3Ni44MTcgMjcuNzU5M0MxNzYuMDE1IDI3Ljc1OTMgMTc1LjcyNyAyNy40MzAyIDE3NS43MjcgMjYuNjY5MVYxNi4yNDA2QzE3NS43MjcgMTMuNjI4MyAxNzcuMTg4IDEyLjEyNjcgMTc4LjQwMSAxMi4xMjY3QzE3OC43OTIgMTIuMTI2NyAxNzkuMDE4IDEyLjM3MzYgMTc5LjAxOCAxMi44NjcyVjI2LjY2OTFDMTc5LjAxOCAyNy40MzAyIDE3OC43MyAyNy43NTkzIDE3Ny45MjggMjcuNzU5M0gxNzYuODE3Wk0xODMuMDkzIDE1LjYwMjlDMTgyLjA0NCAxNS42MDI5IDE4MS4yMjEgMTQuODAwNyAxODEuMjIxIDEzLjgxMzRDMTgxLjIyMSAxMi44MDU1IDE4Mi4wNDQgMTIuMDIzOSAxODMuMDkzIDEyLjAyMzlDMTg0LjEwMSAxMi4wMjM5IDE4NC45NjQgMTIuODA1NSAxODQuOTY0IDEzLjgxMzRDMTg0Ljk2NCAxNC44MDA3IDE4NC4xMDEgMTUuNjAyOSAxODMuMDkzIDE1LjYwMjlaTTE4Mi41MzcgMjcuNzU5M0MxODEuNzc2IDI3Ljc1OTMgMTgxLjQ0NyAyNy40NzEzIDE4MS40NDcgMjYuNjY5MVYxOC4zNTkyQzE4MS40NDcgMTcuNTU3IDE4MS43NzYgMTcuMjY5IDE4Mi41MzcgMTcuMjY5SDE4My42NDhDMTg0LjQwOSAxNy4yNjkgMTg0LjczOCAxNy41NTcgMTg0LjczOCAxOC4zNTkyVjI2LjY2OTFDMTg0LjczOCAyNy40NzEzIDE4NC40MDkgMjcuNzU5MyAxODMuNjQ4IDI3Ljc1OTNIMTgyLjUzN1pNMTkxLjA1NSAyOC4xMDlDMTg5LjQ5MSAyOC4xMDkgMTg3LjkwOCAyNy43Mzg3IDE4Ny4zNzMgMjcuNDUwN0MxODYuODc5IDI3LjE4MzMgMTg2LjgxNyAyNi44NTQyIDE4Ni44MTcgMjYuNTI1MVYyNS41MTcyQzE4Ni44MTcgMjUuMDg1MyAxODcuMDAzIDI0Ljc1NjIgMTg3LjQ3NiAyNC43NTYyQzE4OC4xNTQgMjQuNzU2MiAxODguOTU3IDI1LjQ3NjEgMTkxLjM0MyAyNS40NzYxQzE5Mi4wNDIgMjUuNDc2MSAxOTIuNTU2IDI1LjIyOTMgMTkyLjU1NiAyNC42NzM5QzE5Mi41NTYgMjQuMTE4NSAxOTIuMTQ1IDIzLjk5NTEgMTkwLjkzMSAyMy43Njg5TDE5MC4yNzMgMjMuNjQ1NEMxODguMjk4IDIzLjI3NTIgMTg2Ljc5NyAyMi41NzU5IDE4Ni43OTcgMjAuNDk4NEMxODYuNzk3IDE3Ljc0MjEgMTg5LjAxOCAxNi45MTkzIDE5MS4zODQgMTYuOTE5M0MxOTMuMTEyIDE2LjkxOTMgMTk0LjQwNyAxNy4yODk2IDE5NC45MjIgMTcuNTM2NEMxOTUuMzk1IDE3Ljc2MjcgMTk1LjQ3NyAxOC4wNTA2IDE5NS40NzcgMTguNDYyVjE5LjQ2OTlDMTk1LjQ3NyAyMC4wMDQ3IDE5NS4yMyAyMC4xODk4IDE5NC44MTkgMjAuMTg5OEMxOTQuMTQgMjAuMTg5OCAxOTIuOTY4IDE5LjU1MjIgMTkxLjM0MyAxOS41NTIyQzE5MC40OTkgMTkuNTUyMiAxOTAuMTI5IDE5Ljg0MDIgMTkwLjEyOSAyMC4yNTE1QzE5MC4xMjkgMjAuNzQ1MiAxOTAuNTIgMjAuODY4NiAxOTEuNjcyIDIxLjA3NDNMMTkyLjI0OCAyMS4xNzcyQzE5NC4yMjIgMjEuNTI2OCAxOTUuODg4IDIyLjE0MzkgMTk1Ljg4OCAyNC41OTE2QzE5NS44ODggMjcuMjAzOSAxOTMuNjY3IDI4LjEwOSAxOTEuMDU1IDI4LjEwOVpNMjA3LjYwMSAxOC4zNzk3QzIwOC40NDQgMTkuMzY3MSAyMDguODU1IDIwLjY0MjQgMjA4Ljg1NSAyMi43MTk4VjI2LjY2OTFDMjA4Ljg1NSAyNy40NzEzIDIwOC41MjYgMjcuNzU5MyAyMDcuNzY1IDI3Ljc1OTNIMjA2LjY1NUMyMDUuODk0IDI3Ljc1OTMgMjA1LjU2NCAyNy40NzEzIDIwNS41NjQgMjYuNjY5MVYyMi44MjI3QzIwNS41NjQgMjEuODM1NCAyMDUuNCAyMS4xNTY2IDIwNS4wNSAyMC43MDQxQzIwNC42OCAyMC4yMzEgMjA0LjEyNSAxOS45ODQxIDIwMy4zODQgMTkuOTg0MUMyMDIuNjg1IDE5Ljk4NDEgMjAyLjA2OCAyMC4yMzEgMjAxLjY1NiAyMC43MDQxQzIwMS4yNjUgMjEuMTU2NiAyMDEuMDM5IDIxLjg1NTkgMjAxLjAzOSAyMi44MDIxVjI2LjY2OTFDMjAxLjAzOSAyNy40MzAyIDIwMC43NTEgMjcuNzU5MyAxOTkuOTQ5IDI3Ljc1OTNIMTk4LjgzOEMxOTguMDM2IDI3Ljc1OTMgMTk3Ljc0OCAyNy40MzAyIDE5Ny43NDggMjYuNjY5MVYxNi4yNDA2QzE5Ny43NDggMTMuNjI4MyAxOTkuMjA5IDEyLjEyNjcgMjAwLjQyMiAxMi4xMjY3QzIwMC44MTMgMTIuMTI2NyAyMDEuMDM5IDEyLjM3MzYgMjAxLjAzOSAxMi44NjcyVjE3Ljk0NzhDMjAxLjg0MSAxNy4xODY3IDIwMi45MzIgMTYuODU3NiAyMDQuMDgzIDE2Ljg1NzZDMjA1LjQ4MiAxNi44NTc2IDIwNi43NTcgMTcuNDEzIDIwNy42MDEgMTguMzc5N1pNMjIyLjE2OSAyNC44NTlDMjIyLjQ5OCAyNC44NTkgMjIyLjY2MyAyNS4wNjQ3IDIyMi42NjMgMjUuNDM1VjI2LjY0ODVDMjIyLjY2MyAyNy4yODYyIDIyMi41OCAyNy41MTI0IDIyMS45MjIgMjcuNzc5OEMyMjEuNDA4IDI3Ljk4NTUgMjIwLjc5MSAyOC4wNjc4IDIyMC4wMyAyOC4wNjc4QzIxNy4yOTQgMjguMDY3OCAyMTUuOTU3IDI2LjYyOCAyMTUuOTU3IDIzLjY0NTRWMjAuMTA3NkgyMTUuMDkzQzIxNC4zMzIgMjAuMTA3NiAyMTQuMDAzIDE5LjgxOTYgMjE0LjAwMyAxOS4wMTc0VjE4LjM1OTJDMjE0LjAwMyAxNy41NTcgMjE0LjMzMiAxNy4yNjkgMjE1LjA5MyAxNy4yNjlIMjE1Ljk1N1YxNS42ODUyQzIxNS45NTcgMTQuOTI0MSAyMTYuMjQ1IDE0LjU5NSAyMTcuMDQ3IDE0LjU5NUgyMTguMTU4QzIxOC45NiAxNC41OTUgMjE5LjI0OCAxNC45MjQxIDIxOS4yNDggMTUuNjg1MlYxNy4yNjlIMjIxLjM0NkMyMjIuMTA3IDE3LjI2OSAyMjIuNDM2IDE3LjU1NyAyMjIuNDM2IDE4LjM1OTJWMTkuMDE3NEMyMjIuNDM2IDE5LjgxOTYgMjIyLjEwNyAyMC4xMDc2IDIyMS4zNDYgMjAuMTA3NkgyMTkuMjQ4VjIzLjI1NDZDMjE5LjI0OCAyNC42MzI4IDIxOS43MjEgMjUuMDY0NyAyMjAuNzkxIDI1LjA2NDdDMjIxLjUxMSAyNS4wNjQ3IDIyMS44MTkgMjQuODU5IDIyMi4xNjkgMjQuODU5Wk0yMzQuMDY0IDIyLjQ3M0MyMzQuMDY0IDIzLjE3MjQgMjMzLjgzOCAyMy41MDE1IDIzMy4wMTUgMjMuNTAxNUgyMjYuNjM4QzIyNi45MjYgMjQuNDg4OCAyMjcuOTM0IDI1LjI5MSAyMjkuNjgzIDI1LjI5MUMyMzEuNTM0IDI1LjI5MSAyMzIuMzE2IDI0Ljc1NjIgMjMyLjcwNiAyNC43NTYyQzIzMi45NTMgMjQuNzU2MiAyMzMuMjYyIDI0Ljg1OSAyMzMuMjYyIDI1LjM1MjdWMjYuNTQ1N0MyMzMuMjYyIDI2Ljk1NzEgMjMzLjIgMjcuMjY1NiAyMzIuODMgMjcuNDkxOUMyMzIuMzk4IDI3Ljc1OTMgMjMxLjIwNSAyOC4xNzA3IDIyOS4zNTQgMjguMTcwN0MyMjYuMDQyIDI4LjE3MDcgMjIzLjM4OSAyNi4xMTM3IDIyMy4zODkgMjIuNTE0MUMyMjMuMzg5IDE5LjM4NzYgMjI1LjY3MiAxNi44NTc2IDIyOC43NTcgMTYuODU3NkMyMzIuMjEzIDE2Ljg1NzYgMjM0LjA2NCAxOS4wOTk3IDIzNC4wNjQgMjIuNDczWk0yMjguNzk4IDE5LjYxMzlDMjI3LjU2NCAxOS42MTM5IDIyNi44MDMgMjAuMzMzOCAyMjYuNjE4IDIxLjM4MjhIMjMwLjg3NkMyMzAuNzUyIDIwLjM3NSAyMzAuMDk0IDE5LjYxMzkgMjI4Ljc5OCAxOS42MTM5Wk0yMzkuNjgxIDI4LjEwOUMyMzguMTE4IDI4LjEwOSAyMzYuNTM0IDI3LjczODcgMjM2IDI3LjQ1MDdDMjM1LjUwNiAyNy4xODMzIDIzNS40NDQgMjYuODU0MiAyMzUuNDQ0IDI2LjUyNTFWMjUuNTE3MkMyMzUuNDQ0IDI1LjA4NTMgMjM1LjYyOSAyNC43NTYyIDIzNi4xMDIgMjQuNzU2MkMyMzYuNzgxIDI0Ljc1NjIgMjM3LjU4MyAyNS40NzYxIDIzOS45NjkgMjUuNDc2MUMyNDAuNjY5IDI1LjQ3NjEgMjQxLjE4MyAyNS4yMjkzIDI0MS4xODMgMjQuNjczOUMyNDEuMTgzIDI0LjExODUgMjQwLjc3MiAyMy45OTUxIDIzOS41NTggMjMuNzY4OUwyMzguOSAyMy42NDU0QzIzNi45MjUgMjMuMjc1MiAyMzUuNDI0IDIyLjU3NTkgMjM1LjQyNCAyMC40OTg0QzIzNS40MjQgMTcuNzQyMSAyMzcuNjQ1IDE2LjkxOTMgMjQwLjAxMSAxNi45MTkzQzI0MS43MzggMTYuOTE5MyAyNDMuMDM0IDE3LjI4OTYgMjQzLjU0OCAxNy41MzY0QzI0NC4wMjEgMTcuNzYyNyAyNDQuMTA0IDE4LjA1MDYgMjQ0LjEwNCAxOC40NjJWMTkuNDY5OUMyNDQuMTA0IDIwLjAwNDcgMjQzLjg1NyAyMC4xODk4IDI0My40NDYgMjAuMTg5OEMyNDIuNzY3IDIwLjE4OTggMjQxLjU5NCAxOS41NTIyIDIzOS45NjkgMTkuNTUyMkMyMzkuMTI2IDE5LjU1MjIgMjM4Ljc1NiAxOS44NDAyIDIzOC43NTYgMjAuMjUxNUMyMzguNzU2IDIwLjc0NTIgMjM5LjE0NyAyMC44Njg2IDI0MC4yOTggMjEuMDc0M0wyNDAuODc0IDIxLjE3NzJDMjQyLjg0OSAyMS41MjY4IDI0NC41MTUgMjIuMTQzOSAyNDQuNTE1IDI0LjU5MTZDMjQ0LjUxNSAyNy4yMDM5IDI0Mi4yOTQgMjguMTA5IDIzOS42ODEgMjguMTA5Wk0yNTMuMjI5IDI0Ljg1OUMyNTMuNTU4IDI0Ljg1OSAyNTMuNzIzIDI1LjA2NDcgMjUzLjcyMyAyNS40MzVWMjYuNjQ4NUMyNTMuNzIzIDI3LjI4NjIgMjUzLjY0MSAyNy41MTI0IDI1Mi45ODIgMjcuNzc5OEMyNTIuNDY4IDI3Ljk4NTUgMjUxLjg1MSAyOC4wNjc4IDI1MS4wOSAyOC4wNjc4QzI0OC4zNTQgMjguMDY3OCAyNDcuMDE3IDI2LjYyOCAyNDcuMDE3IDIzLjY0NTRWMjAuMTA3NkgyNDYuMTUzQzI0NS4zOTIgMjAuMTA3NiAyNDUuMDYzIDE5LjgxOTYgMjQ1LjA2MyAxOS4wMTc0VjE4LjM1OTJDMjQ1LjA2MyAxNy41NTcgMjQ1LjM5MiAxNy4yNjkgMjQ2LjE1MyAxNy4yNjlIMjQ3LjAxN1YxNS42ODUyQzI0Ny4wMTcgMTQuOTI0MSAyNDcuMzA1IDE0LjU5NSAyNDguMTA4IDE0LjU5NUgyNDkuMjE4QzI1MC4wMiAxNC41OTUgMjUwLjMwOCAxNC45MjQxIDI1MC4zMDggMTUuNjg1MlYxNy4yNjlIMjUyLjQwNkMyNTMuMTY4IDE3LjI2OSAyNTMuNDk3IDE3LjU1NyAyNTMuNDk3IDE4LjM1OTJWMTkuMDE3NEMyNTMuNDk3IDE5LjgxOTYgMjUzLjE2OCAyMC4xMDc2IDI1Mi40MDYgMjAuMTA3NkgyNTAuMzA4VjIzLjI1NDZDMjUwLjMwOCAyNC42MzI4IDI1MC43ODIgMjUuMDY0NyAyNTEuODUxIDI1LjA2NDdDMjUyLjU3MSAyNS4wNjQ3IDI1Mi44OCAyNC44NTkgMjUzLjIyOSAyNC44NTlaIiBmaWxsPSIjNThDQzAyIi8+PHBhdGggZD0iTTMwLjc0OTcgMzIuMDA3NEwyOS43MzA1IDM0LjY4MzhDMjkuNTE1MyAzNS4yNDgyIDI5LjExMjIgMzUuNzIxMiAyOC41ODkgMzYuMDIzQzI4LjA2NTggMzYuMzI0OSAyNy40NTQ2IDM2LjQzNzIgMjYuODU4MyAzNi4zNDA5TDI0LjAzMSAzNS44ODgyQzIzLjg0ODIgMzUuODU5NSAyMy42NjE0IDM1Ljg2OTMgMjMuNDgyNyAzNS45MTcyQzIzLjMwNCAzNS45NjUxIDIzLjEzNzIgMzYuMDQ5OSAyMi45OTMzIDM2LjE2NjJMMjAuNzcyMyAzNy45NzE2QzIwLjMwNDIgMzguMzUzIDE5LjcxODkgMzguNTYxMyAxOS4xMTUxIDM4LjU2MTNDMTguNTExNCAzOC41NjEzIDE3LjkyNiAzOC4zNTMgMTcuNDU4IDM3Ljk3MTZMMTUuMjM3IDM2LjE2NjJDMTUuMDkyNyAzNi4wNDk2IDE0LjkyNTYgMzUuOTY0NSAxNC43NDYzIDM1LjkxNjZDMTQuNTY3MSAzNS44Njg4IDE0LjM3OTggMzUuODU5MSAxNC4xOTY2IDM1Ljg4ODJMMTEuMzY5NCAzNi4zNDA5QzEwLjc3MzEgMzYuNDM3MiAxMC4xNjE4IDM2LjMyNDkgOS42Mzg2MSAzNi4wMjNDOS4xMTU0MSAzNS43MjEyIDguNzEyMjggMzUuMjQ4MiA4LjQ5NzE0IDM0LjY4MzhMNy40Nzc5NiAzMi4wMDc0QzcuNDExNzYgMzEuODM1IDcuMzEwMiAzMS42NzgzIDcuMTc5ODEgMzEuNTQ3NEM3LjA0OTQyIDMxLjQxNjYgNi44OTMwOCAzMS4zMTQ1IDYuNzIwODUgMzEuMjQ3N0w0LjA0NDUxIDMwLjIyODVDMy40Nzk4IDMwLjAxMzggMy4wMDY1IDI5LjYxMDcgMi43MDQ1OCAyOS4wODc0QzIuNDAyNjUgMjguNTY0MSAyLjI5MDYgMjcuOTUyNiAyLjM4NzM1IDI3LjM1NjNMMi44NDAwMyAyNC41MjlDMi44NzA2MyAyNC4zNDcyIDIuODYyODkgMjQuMTYwOSAyLjgxNzMxIDIzLjk4MjJDMi43NzE3MiAyMy44MDM1IDIuNjg5MjkgMjMuNjM2MyAyLjU3NTMxIDIzLjQ5MTNMMC43NTY2NjYgMjEuMjcwM0MwLjM3NTI2MyAyMC44MDIyIDAuMTY2OTkyIDIwLjIxNjkgMC4xNjY5OTIgMTkuNjEzMUMwLjE2Njk5MiAxOS4wMDkzIDAuMzc1MjYzIDE4LjQyNCAwLjc1NjY2NiAxNy45NTZMMi41NjIwNyAxNS43MzVDMi42NzYwNSAxNS41OSAyLjc1ODQ4IDE1LjQyMjggMi44MDQwNyAxNS4yNDQxQzIuODQ5NjYgMTUuMDY1NCAyLjg1NzQgMTQuODc5MSAyLjgyNjc5IDE0LjY5NzJMMi4zODczNSAxMS44N0MyLjI5MDYgMTEuMjczNyAyLjQwMjY1IDEwLjY2MjIgMi43MDQ1OCAxMC4xMzg5QzMuMDA2NSA5LjYxNTU2IDMuNDc5OCA5LjIxMjUgNC4wNDQ1MSA4Ljk5Nzc4TDYuNzIwODUgNy45NzU5NUM2Ljg5MzQ5IDcuOTEwNjEgNy4wNTAyOCA3LjgwOTMyIDcuMTgwOCA3LjY3ODhDNy4zMTEzMyA3LjU0ODI3IDcuNDEyNjIgNy4zOTE0OSA3LjQ3Nzk2IDcuMjE4ODVMOC40OTk3OCA0LjU0MjUxQzguNzE0NTEgMy45Nzc3OSA5LjExNzU2IDMuNTA0NSA5LjY0MDg3IDMuMjAyNTdDMTAuMTY0MiAyLjkwMDY1IDEwLjc3NTcgMi43ODg2IDExLjM3MiAyLjg4NTM1TDE0LjE5NjYgMy4zMzgwMkMxNC4zNzg1IDMuMzY4NjMgMTQuNTY0NyAzLjM2MDg5IDE0Ljc0MzQgMy4zMTUzQzE0LjkyMjEgMy4yNjk3MSAxNS4wODkzIDMuMTg3MjkgMTUuMjM0MyAzLjA3MzNMMTcuNDU1MyAxLjI2NzlDMTcuOTIzNCAwLjg4NjQ5NCAxOC41MDg3IDAuNjc4MjIzIDE5LjExMjUgMC42NzgyMjNDMTkuNzE2MyAwLjY3ODIyMyAyMC4zMDE2IDAuODg2NDk0IDIwLjc2OTYgMS4yNjc5TDIyLjk5MDcgMy4wNzMzQzIzLjEzNTYgMy4xODcyOSAyMy4zMDI5IDMuMjY5NzEgMjMuNDgxNiAzLjMxNTNDMjMuNjYwMyAzLjM2MDg5IDIzLjg0NjUgMy4zNjg2MyAyNC4wMjg0IDMuMzM4MDJMMjYuODU1NiAyLjg4NTM1QzI3LjQ1MiAyLjc4ODYgMjguMDYzNCAyLjkwMDY1IDI4LjU4NjggMy4yMDI1N0MyOS4xMTAxIDMuNTA0NSAyOS41MTMxIDMuOTc3NzkgMjkuNzI3OCA0LjU0MjUxTDMwLjc0NyA3LjIxODg1QzMwLjgxMzggNy4zOTEwNyAzMC45MTU5IDcuNTQ3NDEgMzEuMDQ2OCA3LjY3NzgxQzMxLjE3NzYgNy44MDgyIDMxLjMzNDMgNy45MDk3NiAzMS41MDY4IDcuOTc1OTVMMzQuMTgzMSA4Ljk5Nzc4QzM0Ljc0NzUgOS4yMTI5MiAzNS4yMjA1IDkuNjE2MDYgMzUuNTIyNCAxMC4xMzkzQzM1LjgyNDIgMTAuNjYyNCAzNS45MzY1IDExLjI3MzcgMzUuODQwMyAxMS44N0wzNS4zOTAyIDE0LjY5NDZDMzUuMzYxNSAxNC44Nzc0IDM1LjM3MTMgMTUuMDY0MiAzNS40MTkyIDE1LjI0MjlDMzUuNDY3MSAxNS40MjE3IDM1LjU1MTkgMTUuNTg4NCAzNS42NjgyIDE1LjczMjNMMzcuNDczNiAxNy45NTMzQzM3Ljg1NSAxOC40MjE0IDM4LjA2MzMgMTkuMDA2NyAzOC4wNjMzIDE5LjYxMDVDMzguMDYzMyAyMC4yMTQzIDM3Ljg1NSAyMC43OTk2IDM3LjQ3MzYgMjEuMjY3NkwzNS42NjgyIDIzLjQ4ODdDMzUuNTUxOSAyMy42MzI2IDM1LjQ2NzEgMjMuNzk5MyAzNS40MTkyIDIzLjk3ODFDMzUuMzcxMyAyNC4xNTY4IDM1LjM2MTUgMjQuMzQzNiAzNS4zOTAyIDI0LjUyNjRMMzUuODQyOSAyNy4zNTM2QzM1LjkzOTIgMjcuOTQ5OSAzNS44MjY5IDI4LjU2MTIgMzUuNTI1IDI5LjA4NDRDMzUuMjIzMiAyOS42MDc2IDM0Ljc1MDIgMzAuMDEwNyAzNC4xODU4IDMwLjIyNThMMzEuNTA5NCAzMS4yNDVDMzEuMzM2NCAzMS4zMTE4IDMxLjE3OTQgMzEuNDE0MiAzMS4wNDg1IDMxLjU0NTVDMzAuOTE3NyAzMS42NzY4IDMwLjgxNTggMzEuODM0MiAzMC43NDk3IDMyLjAwNzRaIiBmaWxsPSIjNThDQzAyIi8+PHBhdGggZD0iTTI2LjQ0ODMgMTcuMDc1OEMyNy4xNDIxIDE4LjYxNzQgMjcuMjc2OSAyMC4zNTI1IDI2LjgyOTYgMjEuOTgyOEMyNi4zODIzIDIzLjYxMyAyNS4zODA3IDI1LjAzNjQgMjMuOTk3MyAyNi4wMDhDMjIuNjEzOSAyNi45Nzk2IDIwLjkzNTEgMjcuNDM4NiAxOS4yNDk4IDI3LjMwNjJDMTcuNTY0NSAyNy4xNzM3IDE1Ljk3ODEgMjYuNDU4IDE0Ljc2MzQgMjUuMjgyMkMxMy40ODA2IDI1Ljc1MTEgMTIuMDgzNiAyNS44MDkxIDEwLjc2NjMgMjUuNDQ4MUM5LjQ0ODk1IDI1LjA4NzIgOC4yNzY2NyAyNC4zMjUxIDcuNDEyMSAyMy4yNjc2QzcuMzI2NjIgMjMuMTYyMSA3LjI2NzMzIDIzLjAzNzkgNy4yMzkwNiAyMi45MDUxQzcuMjEwOCAyMi43NzIzIDcuMjE0MzcgMjIuNjM0NyA3LjI0OTQ4IDIyLjUwMzVDNy4yODQ2IDIyLjM3MjQgNy4zNTAyNiAyMi4yNTE0IDcuNDQxMSAyMi4xNTA0QzcuNTMxOTMgMjIuMDQ5NSA3LjY0NTM3IDIxLjk3MTUgNy43NzIxMyAyMS45MjI5TDExLjI5MDMgMjAuNTYyMkw5LjUwMzQxIDE4LjAxMjlDOS4yNzE3NyAxNy42ODEyIDkuMTI1NzMgMTcuMjk3NCA5LjA3ODMxIDE2Ljg5NTZDOS4wMzA4OCAxNi40OTM4IDkuMDgzNTMgMTYuMDg2NSA5LjIzMTU3IDE1LjcxQzkuMzc5NjEgMTUuMzMzNCA5LjYxODQ2IDE0Ljk5OTQgOS45MjY4MyAxNC43Mzc1QzEwLjIzNTIgMTQuNDc1NiAxMC42MDM2IDE0LjI5NCAxMC45OTkxIDE0LjIwODlDMTMuMDExIDEzLjc4IDE0LjMwNDYgMTMuMzY0NCAxNC44Nzk5IDEyLjk2MkMxNS40NTUyIDEyLjU1OTYgMTYuMjc0MSAxMS41MDA4IDE3LjMzNjUgOS43ODUzNUMxNy41NTA4IDkuNDQxMjIgMTcuODQ3MiA5LjE1NTYxIDE4LjE5OSA4Ljk1NDExQzE4LjU1MDggOC43NTI2IDE4Ljk0NyA4LjY0MTUgMTkuMzUyMyA4LjYzMDc1QzE5Ljc1NzYgOC42MTk5OSAyMC4xNTkyIDguNzA5OTIgMjAuNTIxMiA4Ljg5MjQ4QzIwLjg4MzIgOS4wNzUwNCAyMS4xOTQyIDkuMzQ0NTMgMjEuNDI2NSA5LjY3NjgyTDIzLjIwMjggMTIuMjA3NkwyNS42NDM1IDkuMzk4ODZDMjUuNzMyNCA5LjI5NjIxIDI1Ljg0NDQgOS4yMTYwNyAyNS45NzAyIDkuMTY0OTlDMjYuMDk2IDkuMTEzOSAyNi4yMzIxIDkuMDkzMzMgMjYuMzY3NCA5LjEwNDk1QzI2LjUwMjcgOS4xMTY1NyAyNi42MzM0IDkuMTYwMDUgMjYuNzQ4NiA5LjIzMTg0QzI2Ljg2MzkgOS4zMDM2MyAyNi45NjA1IDkuNDAxNjggMjcuMDMwNyA5LjUxNzk4QzI3LjcyNTQgMTAuNjgzOCAyOC4wNDIzIDEyLjAzNjEgMjcuOTM4MSAxMy4zODkzQzI3LjgzMzggMTQuNzQyNCAyNy4zMTM0IDE2LjAzMDEgMjYuNDQ4MyAxNy4wNzU4Wk0yMC4xNDI2IDI5LjEyNTlMMTguMjU1MSAyOC44NjEyQzE3LjkzNzQgMjguODE1MiAxNy42MTQ1IDI4Ljg5NzMgMTcuMzU3MyAyOS4wODk1QzE3LjEwMDIgMjkuMjgxNiAxNi45Mjk4IDI5LjU2OCAxNi44ODM5IDI5Ljg4NTdDMTYuODM3OSAzMC4yMDM0IDE2LjkyIDMwLjUyNjMgMTcuMTEyMSAzMC43ODM1QzE3LjMwNDIgMzEuMDQwNyAxNy41OTA2IDMxLjIxMSAxNy45MDgzIDMxLjI1N0wxOS43OTU4IDMxLjUyMTdDMjAuMTEzOCAzMS41NjU5IDIwLjQzNjQgMzEuNDgyIDIwLjY5MjYgMzEuMjg4NEMyMC45NDg4IDMxLjA5NDggMjEuMTE3NSAzMC44MDczIDIxLjE2MTggMzAuNDg5M0MyMS4yMDYgMzAuMTcxMiAyMS4xMjIxIDI5Ljg0ODYgMjAuOTI4NSAyOS41OTI1QzIwLjczNDggMjkuMzM2MyAyMC40NDc0IDI5LjE2NzUgMjAuMTI5NCAyOS4xMjMzTDIwLjE0MjYgMjkuMTI1OVpNMzAuMDYxNyAyMC42NTQ4QzI5Ljc0ODMgMjAuNTg4MSAyOS40MjExIDIwLjY0ODQgMjkuMTUyMSAyMC44MjI2QzI4Ljg4MzEgMjAuOTk2OCAyOC42OTQyIDIxLjI3MDcgMjguNjI2OSAyMS41ODRMMjguMjMyNSAyMy40NjA5QzI4LjE5NDIgMjMuNjE4NCAyOC4xODc5IDIzLjc4MTkgMjguMjE0MSAyMy45NDE4QzI4LjI0MDIgMjQuMTAxOCAyOC4yOTgyIDI0LjI1NDggMjguMzg0NiAyNC40OTE5QzI4LjQ3MTEgMjQuNTI5IDI4LjU4NDEgMjQuNjQ3MyAyOC43MTcyIDI0LjczOTlDMjguODUwMiAyNC44MzI0IDI5LjAwMDUgMjQuODk3MyAyOS4xNTkxIDI0LjkzMDZDMjkuMzE3NiAyNC45NjQgMjkuNDgxMyAyNC45NjUxIDI5LjY0MDMgMjQuOTM0QzI5Ljc5OTQgMjQuOTAyOSAyOS45NTA2IDI0Ljg0MDEgMzAuMDg0OSAyNC43NDk1QzMwLjIxOTIgMjQuNjU4OCAzMC4zMzM5IDI0LjU0MjEgMzAuNDIyMyAyNC40MDYyQzMwLjUxMDYgMjQuMjcwMyAzMC41NzA3IDI0LjExODEgMzAuNTk5MSAyMy45NTg2TDMwLjk5MzUgMjIuMTA1NUMzMS4wNjExIDIxLjc5MDYgMzEuMDAwOSAyMS40NjE4IDMwLjgyNjIgMjEuMTkxM0MzMC42NTE1IDIwLjkyMDggMzAuMzc2NSAyMC43MzA3IDMwLjA2MTcgMjAuNjYyOFYyMC42NTQ4WiIgZmlsbD0id2hpdGUiLz48L3N2Zz4="
+          alt="Duolingo English Test"
+        />
+      </a>
+      <div class="official">OFFICIAL CERTIFICATE</div>
+    </header>
+
+    <hr class="rule" />
+
+    <section class="identity-row" aria-labelledby="cert-full-name">
+      <img
+        class="photo"
+        id="cert-photo"
+        src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop&crop=face"
+        width="132"
+        height="132"
+        alt=""
+      />
+      <div class="identity-main">
+        <h1 class="full-name" id="cert-full-name">Goodine, Michael Douglas</h1>
+        <div class="identity-dates">
+          <p id="cert-dob-line">Date of birth: August 24, 1982</p>
+          <p id="cert-exam-line">Test taken: February 26, 2025</p>
+        </div>
+      </div>
+      <div class="identity-side">
+        <div class="side-block">
+          <span class="lbl">Certificate ID:</span>
+          <span class="val" id="cert-id-value">ww9u9ff03bcr5mu1</span>
+        </div>
+        <div class="side-block">
+          <span class="lbl">Link:</span>
+          <span class="val"
+            ><a id="cert-link-url" href="https://certs.duolingo.com/ww9u9ff03bcr5mu1"
+              >certs.duolingo.com/ww9u9ff03bcr5mu1</a
+            ></span
+          >
+        </div>
+      </div>
+    </section>
+
+    <hr class="rule" />
+
+    <h2 class="section-heading">Overall Score</h2>
+    <div class="cert-card">
+      <div class="overall-inner">
+        <div class="gauge-col">
+          <div class="gauge-face">
+            <svg
+              class="gauge-svg"
+              viewBox="0 22 240 168"
+              overflow="visible"
+              aria-hidden="true"
+              focusable="false"
+            >
+              <path
+                class="gauge-track"
+                d="M 42.06 165 A 90 90 0 1 1 197.94 165"
+                pathLength="1000"
+              />
+              <path
+                class="gauge-fill"
+                d="M 42.06 165 A 90 90 0 1 1 197.94 165"
+                pathLength="1000"
+              />
+              <text
+                class="gauge-score-center"
+                id="cert-gauge-score"
+                x="120"
+                y="120"
+                text-anchor="middle"
+                dominant-baseline="middle"
+              >
+                160
+              </text>
+              <text
+                class="gauge-cap-label"
+                x="42.06"
+                y="183"
+                text-anchor="middle"
+                dominant-baseline="alphabetic"
+                font-size="10"
+              >
+                10
+              </text>
+              <text
+                class="gauge-cap-label"
+                x="197.94"
+                y="183"
+                text-anchor="middle"
+                dominant-baseline="alphabetic"
+                font-size="10"
+              >
+                160
+              </text>
+            </svg>
+          </div>
+        </div>
+        <div class="vsep" aria-hidden="true"></div>
+        <div class="level-block">
+          <p class="level-title" id="cert-cefr-title">Proficient: CEFR C2</p>
+          <ul class="level-list">
+            <li>
+              <span class="chk" aria-hidden="true">&#10003;</span>
+              <span
+                >Can understand virtually all types of spoken and written language, including
+                nuanced and implicit meaning.</span
+              >
+            </li>
+            <li>
+              <span class="chk" aria-hidden="true">&#10003;</span>
+              <span
+                >Can express themselves fluently and spontaneously with precision, even in
+                complex tasks.</span
+              >
+            </li>
+            <li>
+              <span class="chk" aria-hidden="true">&#10003;</span>
+              <span
+                >Can use language flexibly and effectively for social, academic, and professional
+                purposes.</span
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="section-heading">Individual Subscores</h2>
+    <div class="metrics-strip" id="cert-individual">
+      <div class="metric-cell">
+        <div class="lbl">Speaking</div>
+        <div class="num" data-metric="speaking">160</div>
+      </div>
+      <div class="metric-cell">
+        <div class="lbl">Writing</div>
+        <div class="num" data-metric="writing">160</div>
+      </div>
+      <div class="metric-cell">
+        <div class="lbl">Reading</div>
+        <div class="num" data-metric="reading">160</div>
+      </div>
+      <div class="metric-cell">
+        <div class="lbl">Listening</div>
+        <div class="num" data-metric="listening">155</div>
+      </div>
+    </div>
+
+    <h2 class="section-heading">Integrated Subscores</h2>
+    <div class="metrics-strip integrated" id="cert-integrated">
+      <div class="metric-cell">
+        <div class="lbl">Production</div>
+        <div class="num" data-metric="production">160</div>
+        <div class="desc">Ability to speak and write</div>
+      </div>
+      <div class="metric-cell">
+        <div class="lbl">Literacy</div>
+        <div class="num" data-metric="literacy">160</div>
+        <div class="desc">Ability to write and read</div>
+      </div>
+      <div class="metric-cell">
+        <div class="lbl">Comprehension</div>
+        <div class="num" data-metric="comprehension">160</div>
+        <div class="desc">Ability to read and listen</div>
+      </div>
+      <div class="metric-cell">
+        <div class="lbl">Conversation</div>
+        <div class="num" data-metric="conversation">160</div>
+        <div class="desc">Ability to listen and speak</div>
+      </div>
+    </div>
+
+    <p class="footer-note">
+      Verify this certificate’s authenticity at
+      <a href="https://englishtest.duolingo.com/verify">englishtest.duolingo.com/verify</a>
+    </p>
+      </div>
+    </div>
+  </div>
+  <script src="js/config.js"></script>
+  <script src="js/results-store.js"></script>
+  <script src="js/apply-pages.js"></script>
+  <script>
+    DET_pages.initCertPage();
+  </script>
+</body>
+</html>

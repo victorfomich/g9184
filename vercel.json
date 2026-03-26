@@ -1,0 +1,11 @@
+{
+  "rewrites": [
+    { "source": "/certificate", "destination": "/certificate.html" },
+    { "source": "/admin", "destination": "/admin.html" }
+  ],
+  "redirects": [
+    { "source": "/index.html", "destination": "/", "permanent": true },
+    { "source": "/certificate.html", "destination": "/certificate", "permanent": true },
+    { "source": "/admin.html", "destination": "/admin", "permanent": true }
+  ]
+}
