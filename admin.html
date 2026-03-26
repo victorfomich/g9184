@@ -256,9 +256,96 @@
     .import-block .actions + label {
       margin-top: 12px;
     }
+
+    #admin-login.admin-login-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 99999;
+      background: #000;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .admin-login-box {
+      border: 1px solid var(--line);
+      padding: 24px 28px;
+      max-width: 360px;
+      width: 100%;
+    }
+    .admin-login-title {
+      margin: 0 0 16px;
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    #admin-pin {
+      letter-spacing: 0.25em;
+      font-size: 16px;
+    }
+    .admin-login-err {
+      color: #e88;
+      font-size: 12px;
+      margin: 8px 0 0;
+    }
+    #admin-main {
+      display: none !important;
+    }
+    #admin-login {
+      display: none;
+    }
+    html:not(.js-admin-auth-ok) #admin-login.admin-login-overlay {
+      display: flex !important;
+    }
+    html:not(.js-admin-auth-ok) #admin-main {
+      display: none !important;
+    }
+    html.js-admin-auth-ok #admin-login {
+      display: none !important;
+    }
+    html.js-admin-auth-ok #admin-main {
+      display: block !important;
+    }
   </style>
+  <script>
+    (function () {
+      try {
+        var j = sessionStorage.getItem("det_admin_v1");
+        if (!j) return;
+        var o = JSON.parse(j);
+        if (Date.now() - o.last < 30 * 60 * 1000) {
+          document.documentElement.classList.add("js-admin-auth-ok");
+        }
+      } catch (e) {}
+    })();
+  </script>
 </head>
 <body class="det-panel">
+  <div id="admin-login" class="admin-login-overlay">
+    <div class="admin-login-box">
+      <p class="admin-login-title">Вход</p>
+      <form id="admin-login-form" autocomplete="off">
+        <label for="admin-pin">PIN (4 цифры)</label>
+        <input
+          type="password"
+          id="admin-pin"
+          name="admin-pin"
+          maxlength="4"
+          inputmode="numeric"
+          pattern="[0-9]*"
+          autocomplete="off"
+          autocorrect="off"
+          spellcheck="false"
+        />
+        <p id="admin-login-err" class="admin-login-err" hidden></p>
+        <div class="actions" style="margin-top: 14px">
+          <button type="submit" class="btn-primary">Войти</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="admin-main">
   <div class="top-links">
     <a href="/">← главная</a>
     ·
@@ -377,10 +464,12 @@
       </div>
     </div>
   </div>
+  </div>
 
   <script src="js/config.js"></script>
   <script src="js/results-store.js"></script>
   <script src="js/apply-pages.js"></script>
+  <script src="js/admin-auth.js"></script>
   <script>
     function toast(msg) {
       var t = document.createElement("div");
@@ -574,60 +663,68 @@
       }
     }
 
-    document.getElementById("photo").addEventListener("change", function (e) {
-      var f = e.target.files && e.target.files[0];
-      if (!f) return;
-      if (f.size > 2 * 1024 * 1024) {
-        toast("Файл слишком большой (макс. ~2 МБ)");
-        return;
-      }
-      var r = new FileReader();
-      r.onload = function () {
-        window.__photoDataUrl = r.result;
-        var prev = document.getElementById("photo-preview");
-        prev.src = r.result;
-        prev.style.display = "block";
-      };
-      r.readAsDataURL(f);
-    });
-
-    document.getElementById("btn-random-id").addEventListener("click", function () {
-      var chars = "abcdefghijklmnopqrstuvwxyz0123456789";
-      var out = "";
-      for (var i = 0; i < 16; i++) out += chars[Math.floor(Math.random() * chars.length)];
-      document.getElementById("certificateId").value = out;
-    });
-
-    document.getElementById("result-form").addEventListener("submit", function (e) {
-      e.preventDefault();
-      var data = formToResult();
-      DET_store.upsert(data).then(function (saved) {
+    function initAdminUi() {
+      DET_store.ready.then(function () {
         renderList();
-        fillForm(saved);
-        toast("Сохранено");
       });
-    });
 
-    document.getElementById("btn-new").addEventListener("click", clearForm);
+      document.getElementById("photo").addEventListener("change", function (e) {
+        var f = e.target.files && e.target.files[0];
+        if (!f) return;
+        if (f.size > 2 * 1024 * 1024) {
+          toast("Файл слишком большой (макс. ~2 МБ)");
+          return;
+        }
+        var r = new FileReader();
+        r.onload = function () {
+          window.__photoDataUrl = r.result;
+          var prev = document.getElementById("photo-preview");
+          prev.src = r.result;
+          prev.style.display = "block";
+        };
+        r.readAsDataURL(f);
+      });
 
-    document.getElementById("btn-copy-json").addEventListener("click", function () {
-      copyText(document.getElementById("export-data").value);
-    });
+      document.getElementById("btn-random-id").addEventListener("click", function () {
+        var chars = "abcdefghijklmnopqrstuvwxyz0123456789";
+        var out = "";
+        for (var i = 0; i < 16; i++) out += chars[Math.floor(Math.random() * chars.length)];
+        document.getElementById("certificateId").value = out;
+      });
 
-    document.getElementById("btn-import").addEventListener("click", function () {
-      DET_store
-        .importJson(document.getElementById("import-field").value.trim())
-        .then(function () {
+      document.getElementById("result-form").addEventListener("submit", function (e) {
+        e.preventDefault();
+        var data = formToResult();
+        DET_store.upsert(data).then(function (saved) {
           renderList();
-          toast("Импорт выполнен");
-        })
-        .catch(function (err) {
-          alert("Ошибка импорта: " + (err.message || err));
+          fillForm(saved);
+          toast("Сохранено");
         });
-    });
+      });
 
-    DET_store.ready.then(function () {
-      renderList();
+      document.getElementById("btn-new").addEventListener("click", clearForm);
+
+      document.getElementById("btn-copy-json").addEventListener("click", function () {
+        copyText(document.getElementById("export-data").value);
+      });
+
+      document.getElementById("btn-import").addEventListener("click", function () {
+        DET_store
+          .importJson(document.getElementById("import-field").value.trim())
+          .then(function () {
+            renderList();
+            toast("Импорт выполнен");
+          })
+          .catch(function (err) {
+            alert("Ошибка импорта: " + (err.message || err));
+          });
+      });
+    }
+
+    DET_adminAuth.mount({
+      onGranted: function () {
+        initAdminUi();
+      },
     });
   </script>
 </body>
