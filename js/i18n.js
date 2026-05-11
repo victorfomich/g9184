@@ -34,9 +34,8 @@
 
       "cert.toolbarTitle": "Certificate",
       "cert.print": "Print",
-      "cert.printPdfHint": "Print → More settings → Headers and footers: off.",
-      "cert.printMarginsExplain":
-        "The date, title, and URL in the corners are added by your browser when you print or save as PDF—they are not part of the certificate layout. The official Duolingo English Test usually gives you a ready-made PDF from their app, so you never see the browser’s headers. To match that: in the print dialog open More settings and turn off Headers and footers.",
+      "cert.printPdfHint":
+        "To remove date/URL in PDF corners: Print → More settings → turn off Headers and footers.",
       "cert.official": "OFFICIAL CERTIFICATE",
       "cert.certificateIdLabel": "Certificate ID:",
       "cert.linkLabel": "Link:",
@@ -74,9 +73,8 @@
 
       "cert.toolbarTitle": "Сертификат",
       "cert.print": "Распечатать",
-      "cert.printPdfHint": "Печать → Ещё настройки → колонтитулы: выкл.",
-      "cert.printMarginsExplain":
-        "Дата, заголовок вкладки и адрес по углам добавляет браузер при печати или «Сохранить как PDF» — это не вёрстка сертификата. В официальном Duolingo English Test обычно отдают готовый PDF из приложения, без этого диалога. Чтобы было так же: в окне печати откройте «Ещё настройки» и отключите колонтитулы (Headers and footers).",
+      "cert.printPdfHint":
+        "Чтобы убрать дату и ссылку по углам в PDF: Печать → Ещё настройки → отключите «Колонтитулы» (Headers and footers).",
       "cert.official": "ОФИЦИАЛЬНЫЙ СЕРТИФИКАТ",
       "cert.certificateIdLabel": "ID сертификата:",
       "cert.linkLabel": "Ссылка:",
