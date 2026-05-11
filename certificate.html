@@ -503,12 +503,22 @@
     }
 
     @media print {
+      @page {
+        size: A4;
+        margin: 12mm;
+      }
+
+      html,
       body {
         background: #fff;
+        margin: 0 !important;
+        padding: 0 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
       }
 
       .page {
-        padding: 0;
+        padding: 0 !important;
         max-width: none;
       }
 
@@ -524,6 +534,20 @@
 
       .det-page-loader {
         display: none !important;
+      }
+
+      .cert-card,
+      .identity-row,
+      .overall-inner,
+      .metrics-strip,
+      .level-block {
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
       }
     }
 
@@ -590,7 +614,7 @@
   <div class="page det-page-shell">
     <div class="shell">
       <div class="cert-toolbar">
-        <p class="cert-toolbar-title">Сертификат</p>
+        <p class="cert-toolbar-title" data-i18n="cert.toolbarTitle">Сертификат</p>
         <button type="button" class="print-btn" onclick="window.print()">
           <svg class="print-ico" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
             <path
@@ -598,7 +622,7 @@
               d="M19 8h-1V3H6v5H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-6H7v-3h10v3z"
             />
           </svg>
-          Распечатать
+          <span data-i18n="cert.print">Распечатать</span>
         </button>
       </div>
       <div class="cert-body">
@@ -609,7 +633,7 @@
           alt="Duolingo English Test"
         />
       </a>
-      <div class="official">OFFICIAL CERTIFICATE</div>
+      <div class="official" data-i18n="cert.official">OFFICIAL CERTIFICATE</div>
     </header>
 
     <hr class="rule" />
@@ -633,11 +657,11 @@
       </div>
       <div class="identity-side">
         <div class="side-block">
-          <span class="lbl">Certificate ID:</span>
+          <span class="lbl" data-i18n="cert.certificateIdLabel">Certificate ID:</span>
           <span class="val" id="cert-id-value">—</span>
         </div>
         <div class="side-block">
-          <span class="lbl">Link:</span>
+          <span class="lbl" data-i18n="cert.linkLabel">Link:</span>
           <span class="val"><a id="cert-link-url" href="#">—</a></span>
         </div>
       </div>
@@ -645,7 +669,7 @@
 
     <hr class="rule" />
 
-    <h2 class="section-heading">Overall Score</h2>
+    <h2 class="section-heading" data-i18n="common.overallScore">Overall Score</h2>
     <div class="cert-card">
       <div class="overall-inner">
         <div class="gauge-col">
@@ -730,7 +754,7 @@
       </div>
     </div>
 
-    <h2 class="section-heading">Individual Subscores</h2>
+    <h2 class="section-heading" data-i18n="common.individualSubscores">Individual Subscores</h2>
     <div class="metrics-strip" id="cert-individual">
       <div class="metric-cell">
         <div class="lbl">Speaking</div>
@@ -750,37 +774,38 @@
       </div>
     </div>
 
-    <h2 class="section-heading">Integrated Subscores</h2>
+    <h2 class="section-heading" data-i18n="common.integratedSubscores">Integrated Subscores</h2>
     <div class="metrics-strip integrated" id="cert-integrated">
       <div class="metric-cell">
-        <div class="lbl">Production</div>
+        <div class="lbl" data-i18n="metrics.production">Production</div>
         <div class="num" data-metric="production">160</div>
-        <div class="desc">Ability to speak and write</div>
+        <div class="desc" data-i18n="metricDesc.production">Ability to speak and write</div>
       </div>
       <div class="metric-cell">
-        <div class="lbl">Literacy</div>
+        <div class="lbl" data-i18n="metrics.literacy">Literacy</div>
         <div class="num" data-metric="literacy">160</div>
-        <div class="desc">Ability to write and read</div>
+        <div class="desc" data-i18n="metricDesc.literacy">Ability to write and read</div>
       </div>
       <div class="metric-cell">
-        <div class="lbl">Comprehension</div>
+        <div class="lbl" data-i18n="metrics.comprehension">Comprehension</div>
         <div class="num" data-metric="comprehension">160</div>
-        <div class="desc">Ability to read and listen</div>
+        <div class="desc" data-i18n="metricDesc.comprehension">Ability to read and listen</div>
       </div>
       <div class="metric-cell">
-        <div class="lbl">Conversation</div>
+        <div class="lbl" data-i18n="metrics.conversation">Conversation</div>
         <div class="num" data-metric="conversation">160</div>
-        <div class="desc">Ability to listen and speak</div>
+        <div class="desc" data-i18n="metricDesc.conversation">Ability to listen and speak</div>
       </div>
     </div>
 
     <p class="footer-note">
-      Verify this certificate’s authenticity at
+      <span data-i18n="cert.verifyPrefix">Verify this certificate’s authenticity at</span>
       <a href="https://englishtest.duolingo.com/verify">englishtest.duolingo.com/verify</a>
     </p>
       </div>
     </div>
   </div>
+  <script src="js/i18n.js"></script>
   <script src="js/config.js"></script>
   <script src="js/results-store.js"></script>
   <script src="js/apply-pages.js"></script>

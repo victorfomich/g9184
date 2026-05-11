@@ -113,10 +113,22 @@
     if (nameEl) nameEl.textContent = full || "—";
 
     var dob = document.getElementById("cert-dob-line");
-    if (dob) dob.textContent = "Date of birth: " + (result.dob || "—");
+    if (dob) {
+      var dobPrefix =
+        global.DET_i18n && typeof global.DET_i18n.t === "function"
+          ? global.DET_i18n.t("cert.dobPrefix")
+          : "Date of birth:";
+      dob.textContent = dobPrefix + " " + (result.dob || "—");
+    }
 
     var taken = document.getElementById("cert-exam-line");
-    if (taken) taken.textContent = "Test taken: " + (result.examDate || "—");
+    if (taken) {
+      var takenPrefix =
+        global.DET_i18n && typeof global.DET_i18n.t === "function"
+          ? global.DET_i18n.t("cert.takenPrefix")
+          : "Test taken:";
+      taken.textContent = takenPrefix + " " + (result.examDate || "—");
+    }
 
     var cid = result.certificateId || "";
     var certIdEl = document.getElementById("cert-id-value");
@@ -196,7 +208,10 @@
     bar.setAttribute("role", "alert");
     bar.style.cssText =
       "position:fixed;top:0;left:0;right:0;padding:12px 16px;background:#ffe8e8;color:#8b2e2e;font-family:Nunito,sans-serif;font-size:14px;text-align:center;z-index:9999;";
-    bar.textContent = "Неверная ссылка.";
+    bar.textContent =
+      global.DET_i18n && typeof global.DET_i18n.t === "function"
+        ? global.DET_i18n.t("error.badLink")
+        : "Неверная ссылка.";
     document.body.appendChild(bar);
   }
 
@@ -269,6 +284,10 @@
 
     btn.addEventListener("click", function () {
       var url = window.location.href.split("#")[0];
+      var copiedMsg =
+        global.DET_i18n && typeof global.DET_i18n.t === "function"
+          ? global.DET_i18n.t("toast.linkCopied")
+          : "Ссылка скопирована";
       function fallbackCopy() {
         var ta = document.createElement("textarea");
         ta.value = url;
@@ -278,7 +297,7 @@
         ta.select();
         try {
           document.execCommand("copy");
-          toast("Ссылка скопирована");
+          toast(copiedMsg);
         } catch (e) {
           prompt("Скопируйте ссылку:", url);
         }
@@ -288,7 +307,7 @@
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(url).then(
           function () {
-            toast("Ссылка скопирована");
+            toast(copiedMsg);
           },
           function () {
             fallbackCopy();

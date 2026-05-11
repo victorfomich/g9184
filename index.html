@@ -626,7 +626,7 @@
 <body>
   <div class="det-page-loader" id="det-page-loader" aria-live="polite" aria-busy="true">
     <div class="det-spinner" aria-hidden="true"></div>
-    <span>Loading…</span>
+    <span data-i18n="common.loading">Loading…</span>
   </div>
   <main class="shell det-page-shell">
     <header class="topbar">
@@ -653,10 +653,13 @@
       <div class="hero">
         <div class="hero-left">
           <div class="date" id="exam-date">2025-11-28</div>
-          <div class="title">Certified Test <span class="check" aria-hidden="true">&#10003;</span></div>
+          <div class="title">
+            <span data-i18n="score.certifiedTest">Certified Test</span>
+            <span class="check" aria-hidden="true">&#10003;</span>
+          </div>
           <div class="cta-row">
-            <button type="button" class="cta" id="btn-share-score">Share score</button>
-            <a href="/certificate" class="cta" id="link-certificate">Certificate</a>
+            <button type="button" class="cta" id="btn-share-score" data-i18n="score.shareScore">Share score</button>
+            <a href="/certificate" class="cta" id="link-certificate" data-i18n="score.certificate">Certificate</a>
           </div>
         </div>
 
@@ -724,44 +727,44 @@
         <hr class="divider" />
 
         <section class="subscores-section" aria-labelledby="subscores-individual-heading">
-          <h2 class="section-title" id="subscores-individual-heading">Individual Subscores</h2>
+          <h2 class="section-title" id="subscores-individual-heading" data-i18n="common.individualSubscores">Individual Subscores</h2>
           <div class="grid">
             <div class="metric">
-              <div class="label">Speaking</div>
+              <div class="label" data-i18n="metrics.speaking">Speaking</div>
               <div class="value" data-metric="speaking">135</div>
             </div>
             <div class="metric">
-              <div class="label">Writing</div>
+              <div class="label" data-i18n="metrics.writing">Writing</div>
               <div class="value" data-metric="writing">135</div>
             </div>
             <div class="metric">
-              <div class="label">Reading</div>
+              <div class="label" data-i18n="metrics.reading">Reading</div>
               <div class="value" data-metric="reading">140</div>
             </div>
             <div class="metric">
-              <div class="label">Listening</div>
+              <div class="label" data-i18n="metrics.listening">Listening</div>
               <div class="value" data-metric="listening">140</div>
             </div>
           </div>
         </section>
 
         <section class="subscores-section" aria-labelledby="subscores-integrated-heading">
-          <h2 class="section-title" id="subscores-integrated-heading">Integrated Subscores</h2>
+          <h2 class="section-title" id="subscores-integrated-heading" data-i18n="common.integratedSubscores">Integrated Subscores</h2>
           <div class="grid">
             <div class="metric">
-              <div class="label">Production</div>
+              <div class="label" data-i18n="metrics.production">Production</div>
               <div class="value" data-metric="production">135</div>
             </div>
             <div class="metric">
-              <div class="label">Literacy</div>
+              <div class="label" data-i18n="metrics.literacy">Literacy</div>
               <div class="value" data-metric="literacy">140</div>
             </div>
             <div class="metric">
-              <div class="label">Comprehension</div>
+              <div class="label" data-i18n="metrics.comprehension">Comprehension</div>
               <div class="value" data-metric="comprehension">140</div>
             </div>
             <div class="metric">
-              <div class="label">Conversation</div>
+              <div class="label" data-i18n="metrics.conversation">Conversation</div>
               <div class="value" data-metric="conversation">140</div>
             </div>
           </div>
@@ -769,6 +772,7 @@
       </div>
     </section>
   </main>
+  <script src="js/i18n.js"></script>
   <script src="js/config.js"></script>
   <script src="js/results-store.js"></script>
   <script src="js/apply-pages.js"></script>
