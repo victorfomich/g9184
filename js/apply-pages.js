@@ -7,6 +7,10 @@
     return new URLSearchParams(location.search).get("r");
   }
 
+  function getParamC() {
+    return new URLSearchParams(location.search).get("c");
+  }
+
   function clampScore(n) {
     var x = Number(n);
     if (Number.isNaN(x)) return 140;
@@ -32,6 +36,7 @@
       "index.html": "/",
       certificate: "/certificate",
       "certificate.html": "/certificate",
+      certs: "/certs",
       admin: "/admin",
       "admin.html": "/admin",
     };
@@ -50,6 +55,14 @@
     var url = new URL(fullPath, window.location.origin);
     if (id) url.searchParams.set("r", id);
     return url.href;
+  }
+
+  function certShortUrlByCertificateId(certificateId) {
+    var cid = String(certificateId || "").trim();
+    if (!cid) return "";
+    var prefix = appBasePrefix();
+    var path = prefix + "/certs/" + encodeURIComponent(cid);
+    return new URL(path, window.location.origin).href;
   }
 
   function applyToScorePage(result) {
@@ -135,14 +148,31 @@
     if (certIdEl) certIdEl.textContent = cid || "—";
 
     var linkA = document.getElementById("cert-link-url");
-    if (linkA && result.id) {
-      var certPageUrl = pageUrl("certificate", result.id);
-      linkA.href = certPageUrl;
-      try {
-        var u = new URL(certPageUrl);
-        linkA.textContent = u.host + u.pathname + u.search;
-      } catch (e1) {
-        linkA.textContent = certPageUrl;
+    if (linkA) {
+      var shortUrl = certShortUrlByCertificateId(result.certificateId);
+      if (shortUrl) {
+        linkA.href = shortUrl;
+        try {
+          var u = new URL(shortUrl);
+          var host = u.host;
+          // "certs.<domain>" look (like Duolingo), but keep same-origin URL.
+          linkA.textContent = "certs." + host.replace(/^certs\./, "") + "/" + String(result.certificateId || "");
+        } catch (e1) {
+          linkA.textContent = String(result.certificateId || "—");
+        }
+      } else if (result.id) {
+        // Fallback if certificateId is missing
+        var certPageUrl = pageUrl("certificate", result.id);
+        linkA.href = certPageUrl;
+        try {
+          var u2 = new URL(certPageUrl);
+          linkA.textContent = u2.host + u2.pathname + u2.search;
+        } catch (e2) {
+          linkA.textContent = certPageUrl;
+        }
+      } else {
+        linkA.href = "#";
+        linkA.textContent = "—";
       }
     } else if (linkA) {
       linkA.href = "#";
@@ -243,11 +273,19 @@
 
   function initCertPage() {
     var id = getParamR();
-    if (!id) return;
+    var certId = getParamC();
+    if (!id && !certId) return;
     setPageLoading(true);
     global.DET_store.ready
       .then(function () {
-        return global.DET_store.get(id);
+        if (id) return global.DET_store.get(id);
+        if (global.DET_store.findByCertificateId) return global.DET_store.findByCertificateId(certId);
+        return global.DET_store.list().then(function (items) {
+          for (var i = 0; i < items.length; i++) {
+            if (String(items[i].certificateId || "").trim() === String(certId || "").trim()) return items[i];
+          }
+          return null;
+        });
       })
       .then(function (result) {
         if (!result) {
@@ -321,8 +359,10 @@
 
   global.DET_pages = {
     getParamR: getParamR,
+    getParamC: getParamC,
     buildQueryR: buildQueryR,
     pageUrl: pageUrl,
+    certShortUrlByCertificateId: certShortUrlByCertificateId,
     applyToScorePage: applyToScorePage,
     applyToCertificatePage: applyToCertificatePage,
     setPageLoading: setPageLoading,

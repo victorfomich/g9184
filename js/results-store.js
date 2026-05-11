@@ -126,6 +126,17 @@
     });
   }
 
+  function findByCertificateId(certId) {
+    var needle = String(certId || "").trim();
+    if (!needle) return Promise.resolve(null);
+    return list().then(function (items) {
+      for (var i = 0; i < items.length; i++) {
+        if (String(items[i].certificateId || "").trim() === needle) return items[i];
+      }
+      return null;
+    });
+  }
+
   function exportJson() {
     return ready.then(function () {
       if (mode === "api") {
@@ -168,6 +179,7 @@
       return mode;
     },
     get: get,
+    findByCertificateId: findByCertificateId,
     upsert: upsert,
     remove: remove,
     list: list,

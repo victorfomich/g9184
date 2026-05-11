@@ -1,6 +1,7 @@
 {
   "rewrites": [
     { "source": "/certificate", "destination": "/certificate.html" },
+    { "source": "/certs/:cid", "destination": "/certificate.html?c=:cid" },
     { "source": "/admin", "destination": "/admin.html" }
   ],
   "redirects": [

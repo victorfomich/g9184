@@ -505,7 +505,7 @@
     @media print {
       @page {
         size: A4;
-        margin: 12mm;
+        margin: 10mm;
       }
 
       html,
@@ -526,6 +526,8 @@
         border: none;
         border-radius: 0;
         box-shadow: none;
+        width: 190mm;
+        margin: 0 auto;
       }
 
       .cert-toolbar {
@@ -534,6 +536,29 @@
 
       .det-page-loader {
         display: none !important;
+      }
+
+      .cert-body {
+        padding: 0 !important;
+      }
+
+      .cert-header {
+        margin-bottom: 8mm;
+      }
+
+      .rule {
+        margin: 0 0 8mm !important;
+      }
+
+      .cert-card {
+        padding: 6mm !important;
+        margin-bottom: 8mm !important;
+        border-radius: 10px;
+      }
+
+      .level-block,
+      .metric-cell {
+        border-radius: 10px;
       }
 
       .cert-card,
