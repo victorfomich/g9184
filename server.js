@@ -111,7 +111,7 @@ app.get("/:cid", function (req, res, next) {
     if (!/^certs\./i.test(host)) return next();
     if (!req.params.cid) return next();
     if (req.params.cid === "api") return next();
-    // Favicon and other static one-segment paths (e.g. /DET-logo.jpeg) must not serve certificate HTML.
+    // Favicon and other static one-segment paths (e.g. /DET-logo.png) must not serve certificate HTML.
     if (/\.[a-z0-9]{2,5}$/i.test(req.params.cid)) return next();
     return res.sendFile(path.join(ROOT, "certificate.html"));
   } catch (e) {
