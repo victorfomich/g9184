@@ -33,13 +33,14 @@
       "score.certificate": "Certificate",
 
       "cert.toolbarTitle": "Certificate",
-      "cert.print": "Print",
+      "cert.print": "Save PDF",
+      "cert.savePdfHint": "Downloads a clean PDF (no date/URL in the margins).",
       "cert.official": "OFFICIAL CERTIFICATE",
       "cert.certificateIdLabel": "Certificate ID:",
       "cert.linkLabel": "Link:",
       "cert.verifyPrefix": "Verify this certificate’s authenticity at",
-      "cert.printPdfHint":
-        "Clean PDF: in the print dialog turn off “Headers and footers” (Chrome: More settings).",
+      "cert.pdfLibraryMissing": "Could not load PDF export. Check your network or try again.",
+      "cert.pdfError": "Could not create PDF. Try reloading the page.",
 
       "cert.dobPrefix": "Date of birth:",
       "cert.takenPrefix": "Test taken:",
@@ -72,13 +73,14 @@
       "score.certificate": "Сертификат",
 
       "cert.toolbarTitle": "Сертификат",
-      "cert.print": "Распечатать",
+      "cert.print": "Сохранить PDF",
+      "cert.savePdfHint": "Скачивает чистый PDF без даты и ссылки по краям.",
       "cert.official": "ОФИЦИАЛЬНЫЙ СЕРТИФИКАТ",
       "cert.certificateIdLabel": "ID сертификата:",
       "cert.linkLabel": "Ссылка:",
       "cert.verifyPrefix": "Проверьте подлинность сертификата на",
-      "cert.printPdfHint":
-        "Чистый PDF: в окне печати отключите «Колонтитулы» (Chrome: Ещё настройки → Headers and footers).",
+      "cert.pdfLibraryMissing": "Не удалось загрузить экспорт в PDF. Проверьте сеть и попробуйте снова.",
+      "cert.pdfError": "Не удалось создать PDF. Обновите страницу и попробуйте снова.",
 
       "cert.dobPrefix": "Дата рождения:",
       "cert.takenPrefix": "Экзамен сдан:",
