@@ -33,14 +33,13 @@
       "score.certificate": "Certificate",
 
       "cert.toolbarTitle": "Certificate",
-      "cert.print": "Save PDF",
-      "cert.savePdfHint": "Downloads a clean PDF (no date/URL in the margins).",
+      "cert.print": "Print",
+      "cert.printPdfHint":
+        "To remove date/URL in PDF corners: Print → More settings → turn off Headers and footers.",
       "cert.official": "OFFICIAL CERTIFICATE",
       "cert.certificateIdLabel": "Certificate ID:",
       "cert.linkLabel": "Link:",
       "cert.verifyPrefix": "Verify this certificate’s authenticity at",
-      "cert.pdfLibraryMissing": "Could not load PDF export. Check your network or try again.",
-      "cert.pdfError": "Could not create PDF. Try reloading the page.",
 
       "cert.dobPrefix": "Date of birth:",
       "cert.takenPrefix": "Test taken:",
@@ -73,14 +72,13 @@
       "score.certificate": "Сертификат",
 
       "cert.toolbarTitle": "Сертификат",
-      "cert.print": "Сохранить PDF",
-      "cert.savePdfHint": "Скачивает чистый PDF без даты и ссылки по краям.",
+      "cert.print": "Распечатать",
+      "cert.printPdfHint":
+        "Чтобы убрать дату и ссылку по углам в PDF: Печать → Ещё настройки → отключите «Колонтитулы» (Headers and footers).",
       "cert.official": "ОФИЦИАЛЬНЫЙ СЕРТИФИКАТ",
       "cert.certificateIdLabel": "ID сертификата:",
       "cert.linkLabel": "Ссылка:",
       "cert.verifyPrefix": "Проверьте подлинность сертификата на",
-      "cert.pdfLibraryMissing": "Не удалось загрузить экспорт в PDF. Проверьте сеть и попробуйте снова.",
-      "cert.pdfError": "Не удалось создать PDF. Обновите страницу и попробуйте снова.",
 
       "cert.dobPrefix": "Дата рождения:",
       "cert.takenPrefix": "Экзамен сдан:",

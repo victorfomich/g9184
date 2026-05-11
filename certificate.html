@@ -7,6 +7,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="/DET-logo.jpeg" type="image/jpeg" />
   <title>Сертификат — Duolingo English Test</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -645,8 +646,8 @@
         <button
           type="button"
           class="print-btn"
-          onclick="void DET_pages.saveCertificatePdf()"
-          data-i18n-title="cert.savePdfHint"
+          onclick="window.print()"
+          data-i18n-title="cert.printPdfHint"
         >
           <svg class="print-ico" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
             <path
@@ -840,10 +841,6 @@
   <script src="js/i18n.js"></script>
   <script src="js/config.js"></script>
   <script src="js/results-store.js"></script>
-  <script
-    src="https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.2/dist/html2pdf.bundle.min.js"
-    crossorigin="anonymous"
-  ></script>
   <script src="js/apply-pages.js"></script>
   <script>
     DET_pages.initCertPage();

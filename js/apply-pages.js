@@ -285,82 +285,23 @@
     });
   }
 
-  function sanitizeCertificatePdfFilename() {
-    var el = document.getElementById("cert-full-name");
-    var s = el && el.textContent ? el.textContent.trim() : "certificate";
-    if (!s || s === "—") s = "certificate";
-    s = s
-      .replace(/\s+/g, "-")
-      .replace(/[^a-zA-Z0-9\u0400-\u04FF_.-]+/g, "")
-      .replace(/^[\-.]+|[\-.]+$/g, "");
-    if (!s) s = "certificate";
-    if (s.length > 80) s = s.slice(0, 80);
-    return s + "-DET-certificate.pdf";
-  }
-
-  /**
-   * Save certificate as a real PDF file (no browser print headers: no date/URL/page in margins).
-   * Requires html2pdf.js on the certificate page.
-   */
-  function saveCertificatePdf() {
-    var shell = document.querySelector(".page.det-page-shell .shell");
-    if (!shell) return;
-    if (typeof global.html2pdf !== "function") {
-      var miss =
-        global.DET_i18n && typeof global.DET_i18n.t === "function"
-          ? global.DET_i18n.t("cert.pdfLibraryMissing")
-          : "PDF export is not available (library failed to load).";
-      alert(miss);
-      return;
-    }
-
-    var toolbar = shell.querySelector(".cert-toolbar");
-    var prevTb = "";
-    if (toolbar) {
-      prevTb = toolbar.style.display;
-      toolbar.style.display = "none";
-    }
-    var btn = document.querySelector(".cert-toolbar .print-btn");
-    if (btn) btn.setAttribute("disabled", "disabled");
-
-    function restoreUi() {
-      if (toolbar) toolbar.style.display = prevTb || "";
-      if (btn) btn.removeAttribute("disabled");
-    }
-
-    var opts = {
-      margin: [8, 8, 8, 8],
-      filename: sanitizeCertificatePdfFilename(),
-      image: { type: "jpeg", quality: 0.96 },
-      html2canvas: {
-        scale: 2,
-        useCORS: true,
-        allowTaint: true,
-        logging: false,
-        scrollY: 0,
-        windowWidth: shell.scrollWidth,
-      },
-      jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
-      pagebreak: { mode: ["avoid-all", "css", "legacy"] },
-    };
-
-    var fontWait =
-      document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
-    fontWait
-      .then(function () {
-        return global.html2pdf().set(opts).from(shell).save();
-      })
-      .then(function () {
-        restoreUi();
-      })
-      .catch(function (err) {
-        restoreUi();
-        var msg =
-          global.DET_i18n && typeof global.DET_i18n.t === "function"
-            ? global.DET_i18n.t("cert.pdfError")
-            : "PDF error: " + String((err && err.message) || err);
-        alert(msg);
-      });
+  /** Shorter tab title during print reduces noise in Chrome’s optional print headers. */
+  var __detCertPrintTitleBackup = "";
+  function installCertPrintTitleHooks() {
+    if (global.__detCertPrintTitleHooks) return;
+    global.__detCertPrintTitleHooks = true;
+    window.addEventListener("beforeprint", function () {
+      __detCertPrintTitleBackup = document.title;
+      var el = document.getElementById("cert-full-name");
+      var n = el && el.textContent ? el.textContent.trim() : "";
+      if (n && n !== "—") document.title = n;
+      else if (global.DET_i18n && typeof global.DET_i18n.t === "function")
+        document.title = global.DET_i18n.t("cert.toolbarTitle");
+      else document.title = "Duolingo English Test";
+    });
+    window.addEventListener("afterprint", function () {
+      if (__detCertPrintTitleBackup) document.title = __detCertPrintTitleBackup;
+    });
   }
 
   function showNotFound() {
@@ -405,6 +346,7 @@
     var id = getParamR();
     var certId = getParamC() || getCertSlugFromPathname();
     if (!id && !certId) return;
+    installCertPrintTitleHooks();
     setPageLoading(true);
     global.DET_store.ready
       .then(function () {
@@ -501,6 +443,5 @@
     initScorePage: initScorePage,
     initCertPage: initCertPage,
     initShareButton: initShareButton,
-    saveCertificatePdf: saveCertificatePdf,
   };
 })(typeof window !== "undefined" ? window : this);
