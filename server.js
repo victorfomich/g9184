@@ -103,6 +103,7 @@ app.get("/admin.html", function (req, res) {
 
 app.get("/", sendHtml("index.html"));
 app.get("/certificate", sendHtml("certificate.html"));
+app.get("/certs/:cid", sendHtml("certificate.html"));
 app.get("/admin", sendHtml("admin.html"));
 
 app.use(express.static(ROOT, { index: false }));

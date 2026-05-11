@@ -11,6 +11,20 @@
     return new URLSearchParams(location.search).get("c");
   }
 
+  /** Slug from /certs/<slug> when server serves certificate.html on that path (no ?c=). */
+  function getCertSlugFromPathname() {
+    try {
+      var prefix = appBasePrefix();
+      var path = location.pathname || "";
+      if (prefix && path.indexOf(prefix) === 0) {
+        path = path.slice(prefix.length) || "/";
+      }
+      var m = path.match(/^\/certs\/([^/]+)\/?$/);
+      if (m) return decodeURIComponent(m[1]);
+    } catch (e) {}
+    return "";
+  }
+
   function clampScore(n) {
     var x = Number(n);
     if (Number.isNaN(x)) return 140;
@@ -30,6 +44,17 @@
    * Чистые URL: /, /certificate и т.д.; DET_BASE_PATH для подпапки.
    */
   function pageUrl(kind, id) {
+    var prefix = appBasePrefix();
+    var k = typeof kind === "string" ? kind : "";
+
+    // Short public cert URL: /certs/<certificateId> — must NOT append ?r= (that broke links).
+    if (k === "certs" && id) {
+      var slug = String(id).trim();
+      if (!slug) return new URL(prefix + "/certificate", window.location.origin).href;
+      var certPath = prefix + "/certs/" + encodeURIComponent(slug);
+      return new URL(certPath, window.location.origin).href;
+    }
+
     var map = {
       score: "/",
       index: "/",
@@ -50,7 +75,6 @@
         path = "/" + kind;
       }
     }
-    var prefix = appBasePrefix();
     var fullPath = prefix + (path === "/" ? "/" : path);
     var url = new URL(fullPath, window.location.origin);
     if (id) url.searchParams.set("r", id);
@@ -60,9 +84,16 @@
   function certShortUrlByCertificateId(certificateId) {
     var cid = String(certificateId || "").trim();
     if (!cid) return "";
-    var prefix = appBasePrefix();
-    var path = prefix + "/certs/" + encodeURIComponent(cid);
-    return new URL(path, window.location.origin).href;
+    return pageUrl("certs", cid);
+  }
+
+  /** Prefer /certs/<certificateId>; fallback /certificate?r=<uuid> if no certificateId. */
+  function certificatePublicUrl(result) {
+    if (!result) return "";
+    var cid = String(result.certificateId || "").trim();
+    if (cid) return pageUrl("certs", cid);
+    if (result.id) return pageUrl("certificate", result.id);
+    return "";
   }
 
   function applyToScorePage(result) {
@@ -105,8 +136,9 @@
     if (full) document.title = "DET — " + full;
 
     var certA = document.getElementById("link-certificate");
-    if (certA && result.id) {
-      certA.href = pageUrl("certificate", result.id);
+    if (certA) {
+      var certHref = certificatePublicUrl(result);
+      if (certHref) certA.href = certHref;
     }
   }
 
@@ -174,9 +206,6 @@
         linkA.href = "#";
         linkA.textContent = "—";
       }
-    } else if (linkA) {
-      linkA.href = "#";
-      linkA.textContent = "—";
     }
 
     var photo = document.getElementById("cert-photo");
@@ -273,7 +302,7 @@
 
   function initCertPage() {
     var id = getParamR();
-    var certId = getParamC();
+    var certId = getParamC() || getCertSlugFromPathname();
     if (!id && !certId) return;
     setPageLoading(true);
     global.DET_store.ready
@@ -360,9 +389,11 @@
   global.DET_pages = {
     getParamR: getParamR,
     getParamC: getParamC,
+    getCertSlugFromPathname: getCertSlugFromPathname,
     buildQueryR: buildQueryR,
     pageUrl: pageUrl,
     certShortUrlByCertificateId: certShortUrlByCertificateId,
+    certificatePublicUrl: certificatePublicUrl,
     applyToScorePage: applyToScorePage,
     applyToCertificatePage: applyToCertificatePage,
     setPageLoading: setPageLoading,

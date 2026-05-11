@@ -626,7 +626,9 @@
   <script>
     (function () {
       try {
-        if (new URLSearchParams(location.search).get("r")) document.documentElement.classList.add("det-loading");
+        var q = new URLSearchParams(location.search);
+        if (q.get("r") || q.get("c")) document.documentElement.classList.add("det-loading");
+        if (/\/certs\/[^/]+\/?$/.test(location.pathname || "")) document.documentElement.classList.add("det-loading");
       } catch (e) {}
     })();
   </script>

@@ -571,7 +571,9 @@
                 [r.lastName, r.firstName].filter(Boolean).join(", ") ||
                 r.id;
               var uScore = pageUrl("score", r.id);
-              var uCert = pageUrl("certificate", r.id);
+              var uCert =
+                (DET_pages.certificatePublicUrl && DET_pages.certificatePublicUrl(r)) ||
+                pageUrl("certificate", r.id);
               return (
                 '<div class="result-item">' +
                 "<strong>" +
@@ -598,8 +600,8 @@
                 '<button type="button" class="btn-secondary btn-small" data-copy-s="' +
                 escapeAttr(r.id) +
                 '">Копировать score</button> ' +
-                '<button type="button" class="btn-secondary btn-small" data-copy-c="' +
-                escapeAttr(r.id) +
+                '<button type="button" class="btn-secondary btn-small" data-copy-cert="' +
+                escapeAttr(uCert) +
                 '">Копировать cert</button>' +
                 "</div>"
               );
@@ -628,9 +630,9 @@
               copyText(pageUrl("score", btn.getAttribute("data-copy-s")));
             });
           });
-          list.querySelectorAll("[data-copy-c]").forEach(function (btn) {
+          list.querySelectorAll("[data-copy-cert]").forEach(function (btn) {
             btn.addEventListener("click", function () {
-              copyText(pageUrl("certificate", btn.getAttribute("data-copy-c")));
+              copyText(btn.getAttribute("data-copy-cert") || "");
             });
           });
         })
