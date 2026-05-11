@@ -38,6 +38,8 @@
       "cert.certificateIdLabel": "Certificate ID:",
       "cert.linkLabel": "Link:",
       "cert.verifyPrefix": "Verify this certificate’s authenticity at",
+      "cert.printPdfHint":
+        "Clean PDF: in the print dialog turn off “Headers and footers” (Chrome: More settings).",
 
       "cert.dobPrefix": "Date of birth:",
       "cert.takenPrefix": "Test taken:",
@@ -75,6 +77,8 @@
       "cert.certificateIdLabel": "ID сертификата:",
       "cert.linkLabel": "Ссылка:",
       "cert.verifyPrefix": "Проверьте подлинность сертификата на",
+      "cert.printPdfHint":
+        "Чистый PDF: в окне печати отключите «Колонтитулы» (Chrome: Ещё настройки → Headers and footers).",
 
       "cert.dobPrefix": "Дата рождения:",
       "cert.takenPrefix": "Экзамен сдан:",
@@ -133,6 +137,13 @@
       var key = el.getAttribute("data-i18n");
       if (!key) return;
       el.textContent = t(key);
+    });
+
+    var titleNodes = (root || document).querySelectorAll("[data-i18n-title]");
+    titleNodes.forEach(function (el) {
+      var tk = el.getAttribute("data-i18n-title");
+      if (!tk) return;
+      el.setAttribute("title", t(tk));
     });
 
     // Translate common loader text if present.

@@ -257,7 +257,8 @@
       if (el && result[k] !== undefined) el.textContent = String(result[k]);
     });
 
-    if (full) document.title = "Certificate — " + full;
+    // Keep tab title short — Chrome/Safari often put document.title in PDF headers.
+    if (full) document.title = full + " · Duolingo English Test";
   }
 
   function setPageLoading(on) {
@@ -281,6 +282,24 @@
         photo.addEventListener("load", done, { once: true });
         photo.addEventListener("error", done, { once: true });
       });
+    });
+  }
+
+  /** Browser PDF headers (date, URL, page 1/1) are not controllable via CSS; shorten document.title at print time. */
+  var __detCertPrintTitleBackup = "";
+  function installCertPrintPdfHooks() {
+    if (global.__detCertPrintPdfHooks) return;
+    global.__detCertPrintPdfHooks = true;
+    window.addEventListener("beforeprint", function () {
+      __detCertPrintTitleBackup = document.title;
+      var el = document.getElementById("cert-full-name");
+      var n = el && el.textContent ? el.textContent.trim() : "";
+      if (n && n !== "—") document.title = n;
+      else if (global.DET_i18n && typeof global.DET_i18n.t === "function") document.title = global.DET_i18n.t("cert.toolbarTitle");
+      else document.title = "Duolingo English Test";
+    });
+    window.addEventListener("afterprint", function () {
+      if (__detCertPrintTitleBackup) document.title = __detCertPrintTitleBackup;
     });
   }
 
@@ -326,6 +345,7 @@
     var id = getParamR();
     var certId = getParamC() || getCertSlugFromPathname();
     if (!id && !certId) return;
+    installCertPrintPdfHooks();
     setPageLoading(true);
     global.DET_store.ready
       .then(function () {
