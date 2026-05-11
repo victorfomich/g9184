@@ -19,8 +19,14 @@
       if (prefix && path.indexOf(prefix) === 0) {
         path = path.slice(prefix.length) || "/";
       }
-      var m = path.match(/^\/certs\/([^/]+)\/?$/);
-      if (m) return decodeURIComponent(m[1]);
+      // Host-style: certs.<domain>/<slug>
+      if (/^certs\./i.test(String(location.hostname || ""))) {
+        var m0 = path.match(/^\/([^/]+)\/?$/);
+        if (m0 && m0[1] && m0[1] !== "certificate") return decodeURIComponent(m0[1]);
+      }
+      // Path-style: <domain>/certs/<slug>
+      var m1 = path.match(/^\/certs\/([^/]+)\/?$/);
+      if (m1) return decodeURIComponent(m1[1]);
     } catch (e) {}
     return "";
   }
@@ -47,12 +53,28 @@
     var prefix = appBasePrefix();
     var k = typeof kind === "string" ? kind : "";
 
-    // Short public cert URL: /certs/<certificateId> — must NOT append ?r= (that broke links).
+    function certsOrigin() {
+      try {
+        var host = String(location.hostname || "");
+        // Prefer certs.<apex> if we're on apex or already on certs.
+        if (/^certs\./i.test(host)) return window.location.origin;
+        // If on www.<apex> keep apex for certs subdomain
+        var apex = host.replace(/^www\./i, "");
+        return "https://certs." + apex;
+      } catch (e) {
+        return window.location.origin;
+      }
+    }
+
+    // Short public cert URL: certs.<domain>/<certificateId> — must NOT append ?r=.
     if (k === "certs" && id) {
       var slug = String(id).trim();
       if (!slug) return new URL(prefix + "/certificate", window.location.origin).href;
-      var certPath = prefix + "/certs/" + encodeURIComponent(slug);
-      return new URL(certPath, window.location.origin).href;
+      var u = new URL(certsOrigin());
+      u.pathname = "/" + encodeURIComponent(slug);
+      u.search = "";
+      u.hash = "";
+      return u.href;
     }
 
     var map = {

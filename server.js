@@ -104,6 +104,18 @@ app.get("/admin.html", function (req, res) {
 app.get("/", sendHtml("index.html"));
 app.get("/certificate", sendHtml("certificate.html"));
 app.get("/certs/:cid", sendHtml("certificate.html"));
+// Subdomain-style: certs.<domain>/<certificateId>
+app.get("/:cid", function (req, res, next) {
+  try {
+    var host = String(req.hostname || "");
+    if (!/^certs\./i.test(host)) return next();
+    if (!req.params.cid) return next();
+    if (req.params.cid === "api") return next();
+    return res.sendFile(path.join(ROOT, "certificate.html"));
+  } catch (e) {
+    return next();
+  }
+});
 app.get("/admin", sendHtml("admin.html"));
 
 app.use(express.static(ROOT, { index: false }));
