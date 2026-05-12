@@ -209,6 +209,14 @@
         grid-column: 1 / -1;
         text-align: left;
       }
+
+      .identity-side .side-block {
+        justify-content: flex-start;
+      }
+
+      .identity-side .val {
+        text-align: left;
+      }
     }
 
     .identity-main {
@@ -240,7 +248,13 @@
     }
 
     .identity-side .side-block {
-      margin-bottom: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      justify-content: flex-end;
+      column-gap: 0.4em;
+      row-gap: 2px;
+      margin-bottom: 8px;
     }
 
     .identity-side .side-block:last-child {
@@ -248,15 +262,22 @@
     }
 
     .identity-side .lbl {
-      display: block;
+      flex: 0 0 auto;
       color: var(--muted);
-      margin-bottom: 2px;
+      white-space: nowrap;
     }
 
     .identity-side .val {
+      flex: 1 1 auto;
+      min-width: 0;
       font-weight: var(--fw-soft);
       font-variation-settings: "wght" var(--fw-soft);
       color: var(--text);
+      word-break: break-all;
+      text-align: right;
+    }
+
+    .identity-side .side-block .val a {
       word-break: break-all;
     }
 
