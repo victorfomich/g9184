@@ -543,11 +543,19 @@
       document.getElementById("form-title").textContent = r.id ? "Редактировать" : "Новый результат";
     }
 
+    function randomCertificateId() {
+      var chars = "abcdefghijklmnopqrstuvwxyz0123456789";
+      var out = "";
+      for (var i = 0; i < 16; i++) out += chars[Math.floor(Math.random() * chars.length)];
+      return out;
+    }
+
     function clearForm() {
       document.getElementById("edit-id").value = "";
       document.getElementById("result-form").reset();
       document.getElementById("cefrLabel").value = "Proficient: CEFR C2";
       document.getElementById("overall").value = "140";
+      document.getElementById("certificateId").value = randomCertificateId();
       window.__photoDataUrl = "";
       var prev = document.getElementById("photo-preview");
       prev.style.display = "none";
@@ -690,10 +698,7 @@
       });
 
       document.getElementById("btn-random-id").addEventListener("click", function () {
-        var chars = "abcdefghijklmnopqrstuvwxyz0123456789";
-        var out = "";
-        for (var i = 0; i < 16; i++) out += chars[Math.floor(Math.random() * chars.length)];
-        document.getElementById("certificateId").value = out;
+        document.getElementById("certificateId").value = randomCertificateId();
       });
 
       document.getElementById("result-form").addEventListener("submit", function (e) {

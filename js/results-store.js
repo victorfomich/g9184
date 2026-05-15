@@ -22,6 +22,22 @@
     localStorage.setItem(STORAGE_KEY, JSON.stringify(store));
   }
 
+  function randomCertificateId() {
+    var chars = "abcdefghijklmnopqrstuvwxyz0123456789";
+    var out = "";
+    for (var i = 0; i < 16; i++) {
+      out += chars[Math.floor(Math.random() * chars.length)];
+    }
+    return out;
+  }
+
+  function ensureCertificateId(result) {
+    if (!String(result.certificateId || "").trim()) {
+      result.certificateId = randomCertificateId();
+    }
+    return result;
+  }
+
   function localGet(id) {
     if (!id) return null;
     return loadStore().results[id] || null;
@@ -35,6 +51,7 @@
           ? global.crypto.randomUUID()
           : "r_" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2, 9);
     }
+    ensureCertificateId(result);
     result.updatedAt = Date.now();
     store.results[result.id] = result;
     saveStore(store);
@@ -87,6 +104,7 @@
   }
 
   function upsert(result) {
+    ensureCertificateId(result);
     return ready.then(function () {
       if (mode === "api") {
         return fetch("/api/results", {

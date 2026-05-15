@@ -365,8 +365,14 @@
           showNotFound();
           return;
         }
-        applyToCertificatePage(result);
-        return waitForDeferredAssets();
+        var chain = function (r) {
+          applyToCertificatePage(r);
+          return waitForDeferredAssets();
+        };
+        if (!String(result.certificateId || "").trim()) {
+          return global.DET_store.upsert(result).then(chain);
+        }
+        return chain(result);
       })
       .then(function () {
         setPageLoading(false);
